@@ -1,4 +1,5 @@
 package com.penpals.model;
+import java.util.List;
 
 public class Customer {
     private String name;
@@ -8,8 +9,10 @@ public class Customer {
     private Address address;
     private int id;
     private ShoppingCart shoppingCart;
+    List<Order> orders;
+    List<Coupon> coupons;
 
-    public Customer(String name, String telNumber, String email, String password, Address address, int id, ShoppingCart shoppingCart) {
+    public Customer(String name, String telNumber, String email, String password, Address address, int id, ShoppingCart shoppingCart, List<Order> orders, List<Coupon> coupons) {
         this.name = name;
         this.telNumber = telNumber;
         this.email = email;
@@ -17,6 +20,8 @@ public class Customer {
         this.address = address;
         this.id = id;
         this.shoppingCart = shoppingCart;
+        this.orders = orders;
+        this.coupons = coupons;
     }
 
     public int getCustomerId() {
@@ -82,5 +87,23 @@ public class Customer {
     public void setCustomerShoppingCart(ShoppingCart shoppingCart) 
     {
         this.shoppingCart = shoppingCart;
+    }
+
+    public List<Order> getCustomerOrders() {
+        return orders;
+    }
+
+    public void setCustomerOrders(List<Order> orders) 
+    {
+        this.orders = orders;
+    }
+
+    public List<Coupon> getCustomerCoupons() {
+        return coupons;
+    }
+
+    public void setCustomerCoupons(List<Coupon> coupons) 
+    {
+        this.coupons = coupons;
     }
 }

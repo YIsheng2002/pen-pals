@@ -6,15 +6,15 @@ import java.util.List;
 public class Order {
     private int id;
     private Date date;
-    private String status;
+    private boolean isDelivered;
     private double total;
     private Customer customer;
     private List<CartItem> cartItems;
 
-    public Order(int id, Date date, String status, double total, Customer customer, List<CartItem> cartItems) {
+    public Order(int id, Date date, boolean isDelivered, double total, Customer customer, List<CartItem> cartItems) {
         this.id = id;
         this.date = date;
-        this.status = status;
+        this.isDelivered = false;
         this.total = total;
         this.customer = customer;
         this.cartItems = cartItems;
@@ -24,7 +24,7 @@ public class Order {
     {
         this.id = 0;
         this.date = new Date();
-        this.status = "";
+        this.isDelivered = false;
         this.total = 0.0;
         this.cartItems = null;
     }
@@ -47,13 +47,13 @@ public class Order {
         this.date = date;
     }
 
-    public String getOrderStatus() {
-        return status;
+    public boolean getOrderIsDelivered() {
+        return isDelivered;
     }
 
-    public void setOrderStatus(String status) 
+    public void setOrderIsDelivered(boolean isDelivered) 
     {
-        this.status = status;
+        this.isDelivered = isDelivered;
     }
 
     public double getOrderTotal() {
