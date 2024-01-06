@@ -1,4 +1,4 @@
-package view;
+package com.penpals.view;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -28,7 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import database.MyDatabase;
+import com.penpals.db.MyDatabase;
 
 public class Register extends JFrame implements ActionListener,MouseListener{
 

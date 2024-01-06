@@ -44,7 +44,6 @@ public class BrowseProduct extends JFrame implements MouseListener, ActionListen
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private ArrayList<Product> products = new ArrayList<>();
-	HashMap<String, String> productImagePath = new HashMap<String, String>();
 	private Dimension minimumSize;
 	private JButton shoppingCart;
 	private ImageIcon cartIcon;
@@ -63,77 +62,80 @@ public class BrowseProduct extends JFrame implements MouseListener, ActionListen
 	 * Create the frame.
 	 */
 	public BrowseProduct() {
+
+		initializeComponents();
+	}
+	
+	private void initializeComponents() {
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 1000, 800, 750);
-		minimumSize = new Dimension(800, 750); // Adjust the dimensions as needed
+		setBounds(200, 1000, 900, 700);
+		minimumSize = new Dimension(900,700); // Adjust the dimensions as needed
+		//set frame min size
         setMinimumSize(minimumSize);
-        
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		
-		setContentPane(contentPane);
 
-		northPanel = new JPanel(new BorderLayout(0,0));
+		JPanel northPanel = new JPanel(new BorderLayout(0,0));
 		northPanel.setPreferredSize(new Dimension(450,30));
+		northPanel.setOpaque(false);
 
 		
-		northLeftPanel = new JPanel(new BorderLayout(0,0));
-        // Add icon
+		JPanel northLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		northLeftPanel.setOpaque(false);
+        //Search icon
         JLabel searchLabel = new JLabel("");
         ImageIcon searchIcon = createResizedIcon("/resources/uiSymbol/searchSymbol.jpg", 15, 15);
         searchLabel.setIcon(searchIcon);
-        northLeftPanel.add(searchLabel, BorderLayout.WEST);
-	
-		northPanel.add(northLeftPanel,BorderLayout.WEST);
-		
+        
+        //Search text area
 		JTextField textField = new JTextField();
-
-		northLeftPanel.add(textField, BorderLayout.CENTER);
 		textField.setColumns(40);
 		
-		northRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+		
+		northLeftPanel.add(searchLabel);
+		northLeftPanel.add(textField);
+		northPanel.add(northLeftPanel,BorderLayout.WEST);
 		
 		
-		//add shopping cart button
+		JPanel northRightPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING, 5, 0));
+		northRightPanel.setOpaque(false);
+		
+		
+		//shopping cart button
 		shoppingCart = new JButton("");
-		cartIcon = createResizedIcon("/resources/uiSymbol/Cart.jpg", 22, 22);
-
+		ImageIcon cartIcon = createResizedIcon("/resources/uiSymbol/Cart.jpg", 22, 22);
 		shoppingCart.setIcon(cartIcon);
 		shoppingCart.addMouseListener(this);
 		
-
-		northRightPanel.add(shoppingCart);
-		
-		
+		//user profile button
 		userProfile = new JButton("");
-
-		profileIcon = createResizedIcon("/resources/uiSymbol/user_profile.png", 22, 22);
+		ImageIcon profileIcon = createResizedIcon("/resources/uiSymbol/user_profile.png", 22, 22);
 		userProfile.setIcon(profileIcon);
-		userProfile.addMouseListener(this);
+		userProfile.addMouseListener(this);	
+
+		
+		northRightPanel.add(shoppingCart);
 		northRightPanel.add(userProfile);
 		
 		northPanel.add(northRightPanel,BorderLayout.EAST);
 
-		add(northPanel,BorderLayout.NORTH);
 
 		
-       productPanel = new JPanel(new GridLayout(0, 3, 20, 50));
-
-      
-       //load product images and their URL
+       
        try {
 		products = loadProducts();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
-
-
+       //JPanel for products
+       JPanel productPanel = new JPanel(new GridLayout(0, 3, 20, 50));
+       //productPanel.setOpaque(false);
+       
        for (Product product : products) {
            // Create a panel for each product with a BorderLayout
     	   
@@ -195,12 +197,19 @@ public class BrowseProduct extends JFrame implements MouseListener, ActionListen
            
        }
 
-       scrollableBrowseArea = new JScrollPane(productPanel);
+       JScrollPane scrollableBrowseArea = new JScrollPane(productPanel);
        scrollableBrowseArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
        scrollableBrowseArea.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-       add(scrollableBrowseArea, BorderLayout.CENTER);      
-		
+       
+       contentPane = new JPanel(new BorderLayout());
+       contentPane.add(northPanel,BorderLayout.NORTH);
+       contentPane.add(scrollableBrowseArea, BorderLayout.CENTER); 
+       contentPane.setOpaque(false);
+       setBackground(new Color(235, 217, 209));
+       setContentPane(contentPane);
+      
+       pack();
+       setVisible(true);
 		
 	}
 
