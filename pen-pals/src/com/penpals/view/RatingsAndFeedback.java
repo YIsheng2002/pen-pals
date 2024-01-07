@@ -62,7 +62,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	private void initializeComponents(Order order)
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 900,700);
 		 Dimension minimumSize = new Dimension(900,700); 
 			//set frame min size
 	     setMinimumSize(minimumSize);
