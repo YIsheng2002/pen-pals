@@ -106,7 +106,8 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 		if(e.getSource()==userImageLabel || e.getSource()==usernameLabel)
 		{
 			dispose();
-			//jump to user profile page
+			UserProfile frame = new UserProfile();
+			frame.setVisible(true);
 		}
 	}
 
