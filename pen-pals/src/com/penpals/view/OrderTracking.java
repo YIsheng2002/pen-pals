@@ -14,6 +14,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -27,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.penpals.model.CartItem;
 import com.penpals.model.Order;
 
 public class OrderTracking extends JFrame implements MouseListener, ActionListener {
@@ -35,6 +39,7 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 	private JPanel contentPane;
 	private JButton completeOrderButton;
 	private JButton backButton;
+	private Order order;
 
 
 
@@ -42,27 +47,25 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 	/**
 	 * Create the frame.
 	 */
-//	public OrderTracking(Order order) {    //uncomment it
-//		initializeComponent(order);
-//	}
-	
-	public OrderTracking() { //delete it later
-		initializeComponent();
+	public OrderTracking(Order order) {   
+		this.order = order;
+		initializeComponent(order);
 	}
 	
-	
-	//private void initializeComponent(Order order)  // uncomment it, pass Order as parameter
-	private void initializeComponent() //delete this later
+
+
+	private void initializeComponent(Order order) 
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setLayout(new BorderLayout());
-	
+		 Dimension minimumSize = new Dimension(900,700); 
+			//set frame min size
+	     setMinimumSize(minimumSize);
+	     
 			//status JLabel
-			//status = order.getOrderIsDelivered();
-			int status = 0;
 			String statusString;
-			if(status == 0)
+			if(order.getOrderIsDelivered())
 			{
 				statusString = "Status: In Delivery";
 			}
@@ -79,8 +82,12 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			
 			
 			//address JLanel
-			//String address = order.getCustomer().getAddress();
-			String address = "123,Jalan Melaka";
+			int number = order.getOrderCustomer().getCustomerAddress().getNumber();
+			int postcode = order.getOrderCustomer().getCustomerAddress().getPostcode();
+			String state = order.getOrderCustomer().getCustomerAddress().getState();
+			String road = order.getOrderCustomer().getCustomerAddress().getRoad();
+			
+			String address = String.valueOf(number) + ", " + road + ", " + String.valueOf(postcode)+ state;
 			address = "Address : " + address;
 			JLabel addressLabel = new JLabel();
 			addressLabel.setText(address);
@@ -103,14 +110,15 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			//Product List panel
 		 	//iterate through cartitem
 		 JPanel productPanels = new JPanel(new GridLayout(0,1,0,0));
-			for(int i = 0; i<13;i++) // delete this and change to iteration of list
+		 List<CartItem> cartItems = order.getOrderCartItems();
+		 
+			for(CartItem cartItem : cartItems) // delete this and change to iteration of list
 			{
 				
 //					//product panel for each Product
 					//image JLabel
 					JLabel imageLabel = new JLabel("");
-					//ImageIcon productImage = createResizedIcon(product.getURL(), 100,100); //uncomment this
-			        ImageIcon productImage = createResizedIcon("/resources/uiSymbol/Cart.jpg", 100,100); //delete this later
+			        ImageIcon productImage = createResizedIcon(cartItem.getCartItemProduct().getProductImageURL(), 100,100); 
 			        imageLabel.setIcon(productImage);
 			        imageLabel.setVerticalAlignment(JLabel.CENTER);
 			        
@@ -118,22 +126,20 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			        
 					//product name JLabel
 			        JLabel nameLabel = new JLabel();
-			        //nameLabel.setText(cartItem.getProduct().getName());
-			        nameLabel.setText("Product Name");
+			        nameLabel.setText(cartItem.getCartItemProduct().getProductName());
 			        nameLabel.setVerticalAlignment(JLabel.CENTER);
 			  
 		        
 					//quantity JLabel
 			        //int quantity = cartItem.getQuantity();
-			        int quantity = 3;
+			        int quantity = cartItem.getCartItemQuantity();
 			        String quantityString = String.valueOf(quantity);
-			        quantityString = " x " + quantityString;
+			        quantityString = " x " + quantityString ;
 			        JLabel quantityLabel = new JLabel();
 			        quantityLabel.setText(quantityString);
 			        
 					//total Price JLabel
-			        //double productPrice = cartItem.getProduct().getPrice();
-			        double productPrice = 100;
+			        double productPrice = cartItem.getCartItemProduct().getProductPrice();
 			        double cartItemPrice = productPrice * quantity;
 			        // Format the number to 2 decimal price
 			        DecimalFormat df = new DecimalFormat("#.00");
@@ -150,8 +156,6 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			     productPanel.add(nameLabel,BorderLayout.CENTER);
 			     
 			     	JPanel qtyPricePanel = new JPanel(new BorderLayout());
-	//		     	BoxLayout qtyPriceBox = new BoxLayout(qtyPricePanel, BoxLayout.Y_AXIS); 
-	//		     	qtyPricePanel.setLayout(qtyPriceBox);
 			     	qtyPricePanel.add(quantityLabel,BorderLayout.CENTER);
 			     	qtyPricePanel.add(priceLabel,BorderLayout.SOUTH);
 			     	
@@ -165,11 +169,9 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			}
 			container.add(productPanels);
 			
-		    
-		    
 		     //total price JLabel 
 		     //double price = order.getOrderTotal();
-		     double price = 234.55;
+		     double price = order.getOrderTotal();
 		     String totalPriceString = String.valueOf(price);
 		     totalPriceString  = "RM " + totalPriceString;
 		     JLabel totalPriceLabel = new JLabel();
@@ -177,8 +179,8 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 		     totalPriceLabel.setVerticalAlignment(JLabel.BOTTOM);
 		     
 		     //Order date JLabel
-		     //Date orderDate = order.getOrderDate(); //have to convert to String
-		     String orderDate = "12-12-2023";
+		     Date date = order.getOrderDate();
+		     String orderDate = date.toString();
 		     JLabel orderDateLabel = new JLabel();
 		     orderDateLabel.setVerticalAlignment(JLabel.TOP);
 		     orderDateLabel.setText(orderDate);
@@ -212,8 +214,8 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
      northPanel.add(backButton);
      add(northPanel,BorderLayout.PAGE_START);
     
-		//complete order button add to frame (exist only if order haven't completed
-		if(status==0)
+		//complete order button add to frame (exist only if order haven't completed)
+		if(!order.getIsCompleted())
 		{
 			JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			completeOrderButton = new JButton();
@@ -223,8 +225,15 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			buttonPanel.add(completeOrderButton);
 			add(buttonPanel,BorderLayout.SOUTH);
 		}
-	
-	 
+		else
+		{
+			JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+			JLabel completeLabel = new JLabel();
+			completeLabel.setText("The order is completed.");	
+			completeLabel.setHorizontalAlignment(JLabel.CENTER);
+			southPanel.add(completeLabel);
+			add(southPanel,BorderLayout.SOUTH);
+		}
 	
 	contentPane = new JPanel();
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -239,9 +248,7 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
     setTitle("Order Details");
     setVisible(true);
     
-	 Dimension minimumSize = new Dimension(900,700); // Adjust the dimensions as needed
-		//set frame min size
-     setMinimumSize(minimumSize);
+	
 	
 	}
 
@@ -256,13 +263,13 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			{
 				JOptionPane.showMessageDialog(null,"The order is completed.");
 				//set status as completed
-				//order.setStatus(1); //uncommment it later
+				order.setIsCompleted(true);
 				
 				dispose();
 				//open a new frame with completed order
 				//OrderTracking frame = new OrderTracking(order); //uncomment it 
 				//PLEASE CHECK to confirm the complete order button disappear when order is completed
-				OrderTracking frame = new OrderTracking(); //delete it later
+				RatingsAndFeedback frame = new RatingsAndFeedback(order); //delete it later
 				frame.setVisible(true);
 			}
 		}
