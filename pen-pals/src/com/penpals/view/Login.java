@@ -248,7 +248,7 @@ public class Login extends JFrame implements MouseListener, ActionListener{
 	public void exit()
 	{
 		int result = JOptionPane.showConfirmDialog(null, "Are you sure to exit? ","Exit",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-		if(result == 1)
+		if(result == JOptionPane.YES_OPTION)
 		{
 			JOptionPane.showMessageDialog(null,"Thanks for using!");
 			System.exit(0);
