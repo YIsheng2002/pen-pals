@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -31,6 +32,8 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.penpals.db.MyDatabase;
+import com.penpals.model.CartItem;
+import com.penpals.model.Order;
 
 
 public class RatingsAndFeedback extends JFrame  implements ActionListener, MouseListener{
@@ -41,18 +44,22 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	private JTextField feedbackTextField;
 	private JTextField ratingTextField ;
 	private JPanel commentPanels;
+	private  List<CartItem> cartItems;
+	private Order order;
+
 
 	/**
 	 * Create the frame.
 	 */
 	//public RatingsAndFeedback(Order order) {
-	public RatingsAndFeedback() {
-		//initializeComponents(order);
-		initializeComponents();
+	public RatingsAndFeedback(Order order) {
+
+		this.order = order;
+		initializeComponents(order);
 	}
 	
 	//private void initializeComponents(Order orders)
-	private void initializeComponents()
+	private void initializeComponents(Order order)
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -62,15 +69,15 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 		
 		//loop 
 		 commentPanels = new JPanel(new GridLayout(0,1,0,0));
-			for(int i = 0; i<3;i++) // delete this and change to iteration of list
+		 cartItems = order.getOrderCartItems();
+		 for(CartItem cartItem: cartItems)
 			{
 				
 					JPanel commentPanel = new JPanel(new BorderLayout(0,5));
 					//product panel for each Product
 					//image JLabel
 					JLabel imageLabel = new JLabel("");
-					//ImageIcon productImage = createResizedIcon(product.getURL(), 100,100); //uncomment this
-			        ImageIcon productImage = createResizedIcon("/resources/uiSymbol/Cart.jpg", 100,100); //delete this later
+			        ImageIcon productImage = createResizedIcon(cartItem.getCartItemProduct().getProductImageURL(), 100,100); 
 			        imageLabel.setIcon(productImage);
 			        imageLabel.setVerticalAlignment(JLabel.CENTER);
 			        
@@ -78,22 +85,19 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 			        
 					//product name JLabel
 			        JLabel nameLabel = new JLabel();
-			        //nameLabel.setText(cartItem.getProduct().getName());
-			        nameLabel.setText("Product Name");
+			        nameLabel.setText(cartItem.getCartItemProduct().getProductName());
 			        nameLabel.setVerticalAlignment(JLabel.CENTER);
 			  
 		        
 					//quantity JLabel
-			        //int quantity = cartItem.getQuantity();
-			        int quantity = 3;
+			        int quantity = cartItem.getCartItemQuantity();
 			        String quantityString = String.valueOf(quantity);
 			        quantityString = " x " + quantityString;
 			        JLabel quantityLabel = new JLabel();
 			        quantityLabel.setText(quantityString);
 			        
 					//total Price JLabel
-			        //double productPrice = cartItem.getProduct().getPrice();
-			        double productPrice = 100;
+			        double productPrice = cartItem.getCartItemProduct().getProductPrice();
 			        double cartItemPrice = productPrice * quantity;
 			        // Format the number to 2 decimal price
 			        DecimalFormat df = new DecimalFormat("#.00");
@@ -126,7 +130,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 			     		ratingLabel.setText("Ratings :");
 			     		
 			     		//Ratings text field
-			     		 ratingTextField = new JTextField();
+			     		ratingTextField = new JTextField();
 			     		ratingTextField.setColumns(1);
 			     
 			     		
@@ -280,7 +284,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-            
+            int j = 0;
             for (int i = 0; i < commentPanels.getComponentCount(); i++) {
                 Component component = commentPanels.getComponent(i);
                 if (component instanceof JPanel) {
@@ -302,9 +306,9 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
                         ps.setString(1, feedbackTextField.getText());
                         ps.setString(2,date);
                         ps.setInt(3, Integer.parseInt(ratingTextField.getText()));
-                        //product.getID() //use element of order arraylist in sequence 
-                        ps.setInt(4,1000 );
+                        ps.setInt(4,cartItems.get(j).getCartItemProduct().getProductId());
                         ps.executeUpdate();
+                        j++;
                     } catch (SQLException e) {
                         e.printStackTrace(); // Handle the exception as needed
                     }
@@ -312,6 +316,12 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
             }
             connection.close();
             JOptionPane.showMessageDialog(null, "Ratings and feedbacks are submitted.");
+            
+            dispose();
+            OrderTracking frame = new OrderTracking(order);
+            frame.setVisible(true);
+            
+            
         } catch (SQLException e) {
             e.printStackTrace(); // Handle the exception as needed
         }
