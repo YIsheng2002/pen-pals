@@ -1,4 +1,4 @@
-import com.penpals.db.MyDatabase;
+//import com.penpals.db.MyDatabase;
 import java.util.Scanner;
 import com.penpals.controller.CustomerController;
 import com.penpals.model.Customer;
@@ -7,7 +7,7 @@ import com.penpals.view.Login;
 public class App {
     public static void main(String[] args) throws Exception {
         
-        MyDatabase.doConnection();
+        /**MyDatabase.doConnection();
         Scanner scanner = new Scanner(System.in);
         String username;
         String password;
@@ -44,7 +44,7 @@ public class App {
             System.out.println("Invalid username or password");
         }
 
-        scanner.close();
+        scanner.close();**/
         Login login = new Login();
         login.setVisible(true);
     }
