@@ -171,7 +171,7 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 					for(CartItem cartItem : cartItems) 
 					{
 							productPanel = new JPanel(new BorderLayout(5,0));
-			//					//product panel for each Product
+								//product panel for each Product
 								//image JLabel
 								imageLabel = new JLabel("");
 								
@@ -306,7 +306,7 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 				add(southPanel,BorderLayout.SOUTH);
 			}
 		    
-	    setTitle("Penpals ");
+	    setTitle("Penpals Gift Shop");
 	    setVisible(true);
     
 	}
