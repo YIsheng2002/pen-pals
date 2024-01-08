@@ -31,14 +31,19 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 			private JLabel usernameLabel;
 		
 		//center
-		private JPanel orderHistoryPanel;
-			private JButton orderHistoryButton;
-			private ImageIcon orderHistoryIcon;
+		private JPanel centerPanel;
+			private JPanel voucherPanel;
+				private JButton voucherButton;
+				private ImageIcon voucherIcon;
+			private JPanel orderHistoryPanel;
+				private JButton orderHistoryButton;
+				private ImageIcon orderHistoryIcon;
+			private JPanel cartPanel;
+				private ImageIcon cartIcon;
+				private JButton cartButton;
 			
-		//south
-		private JPanel cartPanel;
-			private ImageIcon cartIcon;
-			private JButton cartButton;
+		
+		
 
 	/**
 	 * Create the frame.
@@ -76,31 +81,47 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 		        usernameLabel.addMouseListener(this);
 	        userPanel.add(usernameLabel);
 	    
-	        //order history label
-	    	orderHistoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	    		orderHistoryIcon = createResizedIcon("/resources/uiSymbol/orderHistory.png", 50,50); 
-		        orderHistoryButton = new JButton("Order History",orderHistoryIcon);
-		        orderHistoryButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		        orderHistoryButton.setPreferredSize(new Dimension(450,100));
-		        orderHistoryButton.addActionListener(this);
-		        orderHistoryButton.addMouseListener(this);
-	        orderHistoryPanel.add(orderHistoryButton);
-	     
+	        centerPanel = new JPanel(new BorderLayout());
 	        
-	        //shopping cart label
-	        cartPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	        	cartIcon = createResizedIcon("/resources/uiSymbol/Cart.jpg", 55,55); 
-		        cartButton = new JButton("Shopping Cart",cartIcon);
-		        cartButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		        cartButton.setPreferredSize(new Dimension(450,100));
-		        cartButton.addActionListener(this);
-		        cartButton.addMouseListener(this);
+	        	//voucher Panel
+		        voucherPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		        	voucherIcon = createResizedIcon("/resources/uiSymbol/voucher.png", 50,50); 
+					 voucherButton = new JButton("Vouchers						",voucherIcon);
+					 voucherButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+					 voucherButton.setPreferredSize(new Dimension(450,100));
+					 voucherButton.addActionListener(this);
+					 voucherButton.addMouseListener(this);
+				 voucherPanel.add(voucherButton);
+			 centerPanel.add(voucherPanel,BorderLayout.PAGE_START);
+					 
+					 
+					 
+		        //order history label
+		    	orderHistoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		    		orderHistoryIcon = createResizedIcon("/resources/uiSymbol/orderHistory.png", 50,50); 
+			        orderHistoryButton = new JButton("Order History",orderHistoryIcon);
+			        orderHistoryButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			        orderHistoryButton.setPreferredSize(new Dimension(450,100));
+			        orderHistoryButton.addActionListener(this);
+			        orderHistoryButton.addMouseListener(this);
+		        orderHistoryPanel.add(orderHistoryButton);
+		    centerPanel.add(orderHistoryPanel,BorderLayout.CENTER);
+		     
 		        
-	        cartPanel.add(cartButton);
+		        //shopping cart label
+		        cartPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		        	cartIcon = createResizedIcon("/resources/uiSymbol/Cart.jpg", 55,55); 
+			        cartButton = new JButton("Shopping Cart",cartIcon);
+			        cartButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			        cartButton.setPreferredSize(new Dimension(450,100));
+			        cartButton.addActionListener(this);
+			        cartButton.addMouseListener(this);
+			        
+		        cartPanel.add(cartButton);
+	        centerPanel.add(cartPanel,BorderLayout.PAGE_END);
 	        
         contentPane.add(userPanel,BorderLayout.PAGE_START);
-        contentPane.add(orderHistoryPanel,BorderLayout.CENTER);
-        contentPane.add(cartPanel,BorderLayout.PAGE_END);
+        contentPane.add(centerPanel,BorderLayout.CENTER);
         pack();
         
 	}
