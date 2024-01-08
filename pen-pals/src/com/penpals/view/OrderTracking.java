@@ -334,7 +334,8 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 		}
 		else if(e.getSource()==backButton)
 		{
-			//jump to user profile
+			UserProfile frame = new UserProfile();
+			frame.setVisible(true);
 		}
 	}
 
