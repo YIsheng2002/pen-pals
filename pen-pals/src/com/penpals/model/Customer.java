@@ -5,6 +5,7 @@ public class Customer {
     private String name;
     private String telNumber;
     private String email;
+    private String username;
     private String password;
     private Address address;
     private int id;
@@ -23,6 +24,8 @@ public class Customer {
         this.orders = orders;
         this.coupons = coupons;
     }
+
+    public Customer() {}
 
     public int getCustomerId() {
         return id;
@@ -58,6 +61,15 @@ public class Customer {
     public void setCustomerEmail(String email) 
     {
         this.email = email;
+    }
+
+    public String getCustomerUsername() {
+        return username;
+    }
+
+    public void setCustomerUsername(String username) 
+    {
+        this.username = username;
     }
 
     public String getCustomerPassword() {
