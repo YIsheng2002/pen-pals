@@ -21,74 +21,88 @@ import java.awt.Font;
 public class UserPage extends JFrame implements ActionListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
+	
 	private JPanel contentPane;
-	private JLabel userImageLabel;
-	private JLabel usernameLabel;
-	private JButton orderHistoryButton;
-	private JButton cartButton;
+		
+		//north panel
+		private JPanel userPanel;
+			private JLabel userImageLabel;
+				private ImageIcon userImage;
+			private JLabel usernameLabel;
+		
+		//center
+		private JPanel orderHistoryPanel;
+			private JButton orderHistoryButton;
+			private ImageIcon orderHistoryIcon;
+			
+		//south
+		private JPanel cartPanel;
+			private ImageIcon cartIcon;
+			private JButton cartButton;
 
 	/**
 	 * Create the frame.
 	 */
 	public UserPage ()
 	{
-		initializeCompoenent();
+		init();
 	}
 	
-	public void initializeCompoenent() {
+	public void init() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 300);
+		setTitle("Penpals Gift Shop");
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout());
-		
+		contentPane.setLayout(new BorderLayout(5,10));
 		setContentPane(contentPane);
+		setResizable(false);
 		
-			//user profile image
-			userImageLabel = new JLabel("");
-	        ImageIcon userImage = createResizedIcon("/resources/uiSymbol/user_profile.png", 50,50); 
-	        userImageLabel.setIcon(userImage);
-	        userImageLabel.setVerticalAlignment(JLabel.CENTER);
-	        userImageLabel.addMouseListener(this);
+			userPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+			
+				//user profile image
+				userImageLabel = new JLabel("");
+		        	userImage = createResizedIcon("/resources/uiSymbol/user_profile.png", 50,50); 
+		        userImageLabel.setIcon(userImage);
+		        userImageLabel.setVerticalAlignment(JLabel.CENTER);
+		        userImageLabel.addMouseListener(this);
+	        userPanel.add(userImageLabel);
 	        
-	        //username label
-	        usernameLabel = new JLabel();
-	        usernameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-	        usernameLabel.setText("Username");
-	        usernameLabel.addMouseListener(this);
-	        
-	    JPanel northPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	    northPanel.add(userImageLabel);
-	    northPanel.add(usernameLabel);
+		        //username label
+		        usernameLabel = new JLabel();
+		        usernameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
+		        usernameLabel.setText("Username");
+		        usernameLabel.addMouseListener(this);
+	        userPanel.add(usernameLabel);
 	    
 	        //order history label
-	    	JPanel orderHistoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	        ImageIcon orderHistoryIcon = createResizedIcon("/resources/uiSymbol/orderHistory.png", 50,50); 
-	        orderHistoryButton = new JButton("Order History",orderHistoryIcon);
-	        orderHistoryButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-	        orderHistoryButton.setPreferredSize(new Dimension(450,100));
-	        orderHistoryButton.addActionListener(this);
-	        orderHistoryButton.addMouseListener(this);
+	    	orderHistoryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	    		orderHistoryIcon = createResizedIcon("/resources/uiSymbol/orderHistory.png", 50,50); 
+		        orderHistoryButton = new JButton("Order History",orderHistoryIcon);
+		        orderHistoryButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		        orderHistoryButton.setPreferredSize(new Dimension(450,100));
+		        orderHistoryButton.addActionListener(this);
+		        orderHistoryButton.addMouseListener(this);
 	        orderHistoryPanel.add(orderHistoryButton);
 	     
 	        
 	        //shopping cart label
-	        JPanel cartPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	        ImageIcon cartIcon = createResizedIcon("/resources/uiSymbol/Cart.jpg", 55,55); 
-	        cartButton = new JButton("Shopping Cart",cartIcon);
-	        cartButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-	        cartButton.setPreferredSize(new Dimension(450,100));
-	        cartButton.addActionListener(this);
-	        cartButton.addMouseListener(this);
+	        cartPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	        	cartIcon = createResizedIcon("/resources/uiSymbol/Cart.jpg", 55,55); 
+		        cartButton = new JButton("Shopping Cart",cartIcon);
+		        cartButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		        cartButton.setPreferredSize(new Dimension(450,100));
+		        cartButton.addActionListener(this);
+		        cartButton.addMouseListener(this);
+		        
 	        cartPanel.add(cartButton);
 	        
-	        
-        contentPane.add(northPanel,BorderLayout.PAGE_START);
+        contentPane.add(userPanel,BorderLayout.PAGE_START);
         contentPane.add(orderHistoryPanel,BorderLayout.CENTER);
         contentPane.add(cartPanel,BorderLayout.PAGE_END);
-        
         pack();
-        setResizable(false);
+        
 	}
 
 	private ImageIcon createResizedIcon(String imagePath, int width, int height) {
