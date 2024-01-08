@@ -45,9 +45,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	//center panel
 	private JPanel contentPane;
 		private JPanel commentPanels;
-		
 			private JPanel commentPanel;
-			
 				private  JPanel productPanel;
 					private JLabel imageLabel;
 						private ImageIcon productImage;
@@ -200,7 +198,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 			//title label
 			label = new JLabel();
 			label.setText("		Ratings and Feedbacks");
-		add(label,BorderLayout.NORTH);
+		getContentPane().add(label,BorderLayout.NORTH);
 		
 			//submit button
 			submitButton = new JButton();
