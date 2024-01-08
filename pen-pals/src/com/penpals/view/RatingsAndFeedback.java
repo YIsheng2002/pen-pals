@@ -79,14 +79,15 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	public RatingsAndFeedback(Order order) {
 
 		this.order = order;
-		initializeComponents(order);
+		init(order);
 	}
 	
 	//private void initializeComponents(Order orders)
-	private void initializeComponents(Order order)
+	private void init(Order order)
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900,700);
+		setTitle("Penpals Gift Shop");
 			//set frame min size
 	    setMinimumSize(new Dimension(900,700));
 
