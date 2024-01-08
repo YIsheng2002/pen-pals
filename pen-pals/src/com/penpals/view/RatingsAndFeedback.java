@@ -39,14 +39,40 @@ import com.penpals.model.Order;
 public class RatingsAndFeedback extends JFrame  implements ActionListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
+	
+	
+	private JScrollPane scrollableBrowseArea;
+	//center panel
 	private JPanel contentPane;
+		private JPanel commentPanels;
+		
+			private JPanel commentPanel;
+			
+				private  JPanel productPanel;
+					private JLabel imageLabel;
+						private ImageIcon productImage;
+					private JLabel nameLabel;
+					private JPanel qtyPricePanel;
+						private JLabel quantityLabel;
+						private JLabel priceLabel;
+						
+				private JPanel ratingPanel;
+					private JLabel ratingLabel;
+					private JTextField ratingTextField ;
+					private JLabel totalRatingLabel;
+					
+				private JPanel feedbackPanel;
+					private JLabel feedbackLabel;
+					private JTextField feedbackTextField;
+		
+		private  List<CartItem> cartItems;
+		private Order order;
+	
+	//North label
+	private JLabel label;
+	
+	//South Button
 	private JButton submitButton;
-	private JTextField feedbackTextField;
-	private JTextField ratingTextField ;
-	private JPanel commentPanels;
-	private  List<CartItem> cartItems;
-	private Order order;
-
 
 	/**
 	 * Create the frame.
@@ -63,119 +89,116 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900,700);
-		 Dimension minimumSize = new Dimension(900,700); 
 			//set frame min size
-	     setMinimumSize(minimumSize);
-		
-		//loop 
-		 commentPanels = new JPanel(new GridLayout(0,1,0,0));
-		 cartItems = order.getOrderCartItems();
-		 for(CartItem cartItem: cartItems)
-			{
-				
-					JPanel commentPanel = new JPanel(new BorderLayout(0,5));
-					//product panel for each Product
-					//image JLabel
-					JLabel imageLabel = new JLabel("");
-			        ImageIcon productImage = createResizedIcon(cartItem.getCartItemProduct().getProductImageURL(), 100,100); 
-			        imageLabel.setIcon(productImage);
-			        imageLabel.setVerticalAlignment(JLabel.CENTER);
-			        
-			   
-			        
-					//product name JLabel
-			        JLabel nameLabel = new JLabel();
-			        nameLabel.setText(cartItem.getCartItemProduct().getProductName());
-			        nameLabel.setVerticalAlignment(JLabel.CENTER);
-			  
-		        
-					//quantity JLabel
-			        int quantity = cartItem.getCartItemQuantity();
-			        String quantityString = String.valueOf(quantity);
-			        quantityString = " x " + quantityString;
-			        JLabel quantityLabel = new JLabel();
-			        quantityLabel.setText(quantityString);
-			        
-					//total Price JLabel
-			        double productPrice = cartItem.getCartItemProduct().getProductPrice();
-			        double cartItemPrice = productPrice * quantity;
-			        // Format the number to 2 decimal price
-			        DecimalFormat df = new DecimalFormat("#.00");
-			        String cartItemPriceString = df.format(cartItemPrice);
+	    setMinimumSize(new Dimension(900,700));
 
-			        cartItemPriceString = "RM " + cartItemPriceString;
-			        
-			        
-			        JLabel priceLabel = new JLabel();
-			        priceLabel.setText(cartItemPriceString);
-			        
-			     JPanel productPanel = new JPanel(new BorderLayout(5,0));
-			     productPanel.add(imageLabel,BorderLayout.LINE_START);
-			     productPanel.add(nameLabel,BorderLayout.CENTER);
-			     
-			     	JPanel qtyPricePanel = new JPanel(new BorderLayout());
-			     	qtyPricePanel.add(quantityLabel,BorderLayout.CENTER);
-			     	qtyPricePanel.add(priceLabel,BorderLayout.SOUTH);
-			     		
-			     productPanel.add(qtyPricePanel,BorderLayout.LINE_END);
-			     productPanel.setPreferredSize(new Dimension(200,200));
-			   
-
-			     
-			     	//Ratings panel
-			     	JPanel ratingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-			     		
-			     		//Ratings label
-			     		JLabel ratingLabel = new JLabel();
-			     		ratingLabel.setText("Ratings :");
-			     		
-			     		//Ratings text field
-			     		ratingTextField = new JTextField();
-			     		ratingTextField.setColumns(1);
-			     
-			     		
-			     		//Total Ratings label
-			     		JLabel totalRatingLabel = new JLabel();
-			     		totalRatingLabel.setText(" / 5");
-			     		
-			     	ratingPanel.add(ratingLabel);
-			     	ratingPanel.add(ratingTextField);
-			     	ratingPanel.add(totalRatingLabel);	
-			     
-			     	//Feedback panel
-			     	JPanel feedbackPanel = new JPanel(new BorderLayout(0,0));
-			     	
-			     		//Feedback label
-				     	JLabel feedbackLabel = new JLabel();
-				     	feedbackLabel.setText("Feedback (Maximum 100 characters) :");
-			     		
-			     		//Ratings text field
-			     		 feedbackTextField = new JTextField();
-			     		feedbackTextField.setColumns(70);
-			     		feedbackTextField.addActionListener(this);
-			     		
-		     		feedbackPanel.add(feedbackLabel,BorderLayout.NORTH);
-		     		feedbackPanel.add(feedbackTextField,BorderLayout.CENTER);
-		     	
-		     		commentPanel.add(productPanel,BorderLayout.NORTH);
-		     		commentPanel.add(ratingPanel,BorderLayout.CENTER);
-		     		commentPanel.add(feedbackPanel,BorderLayout.SOUTH);
-		     		commentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-			     	
-		     	commentPanels.add(commentPanel);
-			     
-			}	 
-		
 			contentPane = new JPanel();
 			contentPane.setBorder(new EmptyBorder(5, 10, 5, 10));
 			contentPane.setLayout(new BorderLayout(0, 0));
 		     
-			JScrollPane scrollableBrowseArea = new JScrollPane(contentPane);
+			scrollableBrowseArea = new JScrollPane(contentPane);
 		    scrollableBrowseArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		    contentPane.add(commentPanels,BorderLayout.CENTER);
+				//loop 
+			 commentPanels = new JPanel(new GridLayout(0,1,0,0));
+			 cartItems = order.getOrderCartItems();
+			 for(CartItem cartItem: cartItems)
+				{
+				 		//comment panel for each Product
+						commentPanel = new JPanel(new BorderLayout(0,5));
+						
+							productPanel = new JPanel(new BorderLayout(5,0));
+								//image JLabel
+								imageLabel = new JLabel("");
+						        	productImage = createResizedIcon(cartItem.getCartItemProduct().getProductImageURL(), 100,100); 
+						        imageLabel.setIcon(productImage);
+						        imageLabel.setVerticalAlignment(JLabel.CENTER);
+						        
+					        productPanel.add(imageLabel,BorderLayout.LINE_START);
+						        
+						        //product name JLabel
+						        nameLabel = new JLabel();
+						        nameLabel.setText(cartItem.getCartItemProduct().getProductName());
+						        nameLabel.setVerticalAlignment(JLabel.CENTER);
+						    productPanel.add(nameLabel,BorderLayout.CENTER);
+					   
+						    
+							    qtyPricePanel = new JPanel(new BorderLayout());
+							    
+									//quantity JLabel
+							        quantityLabel = new JLabel();
+								        int quantity = cartItem.getCartItemQuantity();
+								        String quantityString = String.valueOf(quantity);
+								        quantityString = " x " + quantityString;
+							        quantityLabel.setText(quantityString);
+					        
+							        //price label
+							        priceLabel = new JLabel();
+								        double productPrice = cartItem.getCartItemProduct().getProductPrice();
+								        double cartItemPrice = productPrice * quantity;
+								        // Format the number to 2 decimal price
+								        DecimalFormat df = new DecimalFormat("#.00");
+								        String cartItemPriceString = df.format(cartItemPrice);
+					
+								        cartItemPriceString = "RM " + cartItemPriceString;
+							        priceLabel.setText(cartItemPriceString);
+					        
+						        qtyPricePanel.add(quantityLabel,BorderLayout.CENTER);
+						     	qtyPricePanel.add(priceLabel,BorderLayout.SOUTH);
+				     		
+						     productPanel.add(qtyPricePanel,BorderLayout.LINE_END);
+						     productPanel.setPreferredSize(new Dimension(200,200));
+				   
+	
+				     
+					     	//Ratings panel
+					     	ratingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+					     		
+					     		//Ratings label
+					     		ratingLabel = new JLabel();
+					     		ratingLabel.setText("Ratings :");
+					     		
+					     		//Ratings text field
+					     		ratingTextField = new JTextField();
+					     		ratingTextField.setColumns(1);
+					     
+					     		
+					     		//Total Ratings label
+					     		totalRatingLabel = new JLabel();
+					     		totalRatingLabel.setText(" / 5");
+					     		
+					     	ratingPanel.add(ratingLabel);
+					     	ratingPanel.add(ratingTextField);
+					     	ratingPanel.add(totalRatingLabel);	
+					     
+					     	//Feedback panel
+					     	feedbackPanel = new JPanel(new BorderLayout(0,0));
+					     	
+					     		//Feedback label
+						     	feedbackLabel = new JLabel();
+						     	feedbackLabel.setText("Feedback (Maximum 100 characters) :");
+					     		
+					     		//Ratings text field
+					     		 feedbackTextField = new JTextField();
+					     		feedbackTextField.setColumns(70);
+					     		feedbackTextField.addActionListener(this);
+					     		
+				     		feedbackPanel.add(feedbackLabel,BorderLayout.NORTH);
+				     		feedbackPanel.add(feedbackTextField,BorderLayout.CENTER);
+			     	
+			     		commentPanel.add(productPanel,BorderLayout.NORTH);
+			     		commentPanel.add(ratingPanel,BorderLayout.CENTER);
+			     		commentPanel.add(feedbackPanel,BorderLayout.SOUTH);
+			     		commentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				     	
+			     	commentPanels.add(commentPanel);
+				     
+				}	 
+			
+			    contentPane.add(commentPanels,BorderLayout.CENTER);
 		    getContentPane().add(scrollableBrowseArea, BorderLayout.CENTER);  
+		    
 			//title label
-			JLabel label = new JLabel();
+			label = new JLabel();
 			label.setText("		Ratings and Feedbacks");
 		add(label,BorderLayout.NORTH);
 		
@@ -300,18 +323,19 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
                     // Validate feedback and rating (same as before)
 
                     // If validation passes, add SQL statement to batch
-                    String sql = "INSERT INTO feedback (review,reviewDate,rating, ProductID) VALUES (?, ?,?,?)";
-                    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                        
-                        ps.setString(1, feedbackTextField.getText());
-                        ps.setString(2,date);
-                        ps.setInt(3, Integer.parseInt(ratingTextField.getText()));
-                        ps.setInt(4,cartItems.get(j).getCartItemProduct().getProductId());
-                        ps.executeUpdate();
-                        j++;
-                    } catch (SQLException e) {
-                        e.printStackTrace(); // Handle the exception as needed
-                    }
+                    //write in controller
+//                    String sql = "INSERT INTO feedback (review,reviewDate,rating, ProductID) VALUES (?, ?,?,?)";
+//                    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+//                        
+//                        ps.setString(1, feedbackTextField.getText());
+//                        ps.setString(2,date);
+//                        ps.setInt(3, Integer.parseInt(ratingTextField.getText()));
+//                        ps.setInt(4,cartItems.get(j).getCartItemProduct().getProductId());
+//                        ps.executeUpdate();
+//                        j++;
+//                    } catch (SQLException e) {
+//                        e.printStackTrace(); // Handle the exception as needed
+//                    }
                 }
             }
             connection.close();
