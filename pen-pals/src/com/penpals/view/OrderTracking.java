@@ -322,7 +322,7 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			{
 				JOptionPane.showMessageDialog(null,"The order is completed.");
 				//set status as completed
-				order.setIsCompleted(true);
+				//order.setIsCompleted(true);
 				
 				dispose();
 				//open a new frame with completed order
@@ -342,7 +342,6 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 	private ImageIcon createResizedIcon(String imagePath, int width, int height) {
 	    
 	    ImageIcon originalIcon = new ImageIcon(getClass().getResource(imagePath));
-
 	    Image originalImage = originalIcon.getImage();
 	    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 	    return new ImageIcon(resizedImage);
