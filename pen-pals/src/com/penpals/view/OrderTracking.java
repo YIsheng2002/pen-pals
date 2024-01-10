@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +31,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.penpals.model.Address;
 import com.penpals.model.CartItem;
+import com.penpals.model.Customer;
 import com.penpals.model.Order;
+import com.penpals.model.Product;
+import com.penpals.model.ProductCategory;
+
+
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
 
 public class OrderTracking extends JFrame implements MouseListener, ActionListener {
 
@@ -92,22 +101,28 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 	/**
 	 * Create the frame.
 	 */
-	public OrderTracking(Order order) {   
-		this.order = order;
-		init(order);
+	public OrderTracking() {   
+//		this.order = order;
+		init();
 	}
 	
 
 
-	private void init(Order order) 
+	private void init() 
 	{
+		try {
+			order = loadOrder();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setLayout(new BorderLayout());
 	    setMinimumSize(new Dimension(900,700));
 		     
-		    
+		   
 		    contentPane = new JPanel();
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 			contentPane.setLayout(new BorderLayout(0, 0));
@@ -153,7 +168,7 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 							int postcode = order.getOrderCustomer().getCustomerAddress().getPostcode();
 							String state = order.getOrderCustomer().getCustomerAddress().getState();
 							String road = order.getOrderCustomer().getCustomerAddress().getRoad();
-							String address = String.valueOf(number) + ", " + road + ", " + String.valueOf(postcode)+ state;
+							String address = String.valueOf(number) + ", " + road + ", " + String.valueOf(postcode)+ ", "+ state;
 							address = "Address : " + address;
 				
 						addressLabel.setText(address);
@@ -166,62 +181,12 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 					//Product List panel
 				 	//iterate through cartitem
 					 productPanels = new JPanel(new GridLayout(0,1,0,0));
+					 
 					 List<CartItem> cartItems = order.getOrderCartItems();
 				 
 					for(CartItem cartItem : cartItems) 
 					{
-							productPanel = new JPanel(new BorderLayout(5,0));
-								//product panel for each Product
-								//image JLabel
-								imageLabel = new JLabel("");
-								
-						        	productImage = createResizedIcon(cartItem.getCartItemProduct().getProductImageURL(), 100,100); 
-						        	
-						        imageLabel.setIcon(productImage);
-						        imageLabel.setVerticalAlignment(JLabel.CENTER);
-						        
-						   
-						        
-								//product name JLabel
-						        nameLabel = new JLabel();
-						        nameLabel.setText(cartItem.getCartItemProduct().getProductName());
-						        nameLabel.setVerticalAlignment(JLabel.CENTER);
-						  
-					        
-						        qtyPricePanel = new JPanel(new BorderLayout());
-									//quantity JLabel
-							        quantityLabel = new JLabel();
-							        
-								        int quantity = cartItem.getCartItemQuantity();
-								        String quantityString = String.valueOf(quantity);
-								        quantityString = " x " + quantityString ;
-								        
-								    quantityLabel.setText(quantityString);
-							        
-									//total Price for each product JLabel
-							        priceLabel = new JLabel();
-							        
-								        double productPrice = cartItem.getCartItemProduct().getProductPrice();
-								        double cartItemPrice = productPrice * quantity;
-								        // Format the number to 2 decimal price
-								        DecimalFormat df = new DecimalFormat("#.00");
-								        String cartItemPriceString = df.format(cartItemPrice);
-					
-								        cartItemPriceString = "RM " + cartItemPriceString;
-							        
-							        priceLabel.setText(cartItemPriceString);
-						        
-						     	qtyPricePanel.add(quantityLabel,BorderLayout.CENTER);
-						     	qtyPricePanel.add(priceLabel,BorderLayout.SOUTH);
-						     	
-						     
-						     productPanel.add(imageLabel,BorderLayout.LINE_START);
-						     productPanel.add(nameLabel,BorderLayout.CENTER);
-						     productPanel.add(qtyPricePanel,BorderLayout.LINE_END);
-						     productPanel.setPreferredSize(new Dimension(200,100));
-						     productPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		
-					     productPanels.add(productPanel);
+							createProductPanel(cartItem);
 					     
 					}
 					 container.add(statusPanel);
@@ -334,6 +299,7 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 		}
 		else if(e.getSource()==backButton)
 		{
+			dispose();
 			UserProfile frame = new UserProfile();
 			frame.setVisible(true);
 		}
@@ -345,6 +311,101 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 	    Image originalImage = originalIcon.getImage();
 	    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 	    return new ImageIcon(resizedImage);
+	}
+	
+	
+	public void createProductPanel(CartItem cartItem)
+	{
+		productPanel = new JPanel(new BorderLayout(5,0));
+		//product panel for each Product
+		//image JLabel
+		imageLabel = new JLabel("");
+		
+        	productImage = createResizedIcon(cartItem.getCartItemProduct().getProductImageURL(), 100,100); 
+        	
+        imageLabel.setIcon(productImage);
+        imageLabel.setPreferredSize(new Dimension(120,120));
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+   
+        
+		//product name JLabel
+        nameLabel = new JLabel();
+        nameLabel.setText(cartItem.getCartItemProduct().getProductName());
+        nameLabel.setVerticalAlignment(JLabel.CENTER);
+  
+    
+        qtyPricePanel = new JPanel(new BorderLayout());
+			//quantity JLabel
+	        quantityLabel = new JLabel();
+	        
+		        int quantity = cartItem.getCartItemQuantity();
+		        String quantityString = String.valueOf(quantity);
+		        quantityString = " x " + quantityString ;
+		        
+		    quantityLabel.setText(quantityString);
+	        
+			//total Price for each product JLabel
+	        priceLabel = new JLabel();
+	        
+		        double productPrice = cartItem.getCartItemProduct().getProductPrice();
+		        double cartItemPrice = productPrice * quantity;
+		        // Format the number to 2 decimal price
+		        DecimalFormat df = new DecimalFormat("#.00");
+		        String cartItemPriceString = df.format(cartItemPrice);
+
+		        cartItemPriceString = "RM " + cartItemPriceString;
+	        
+	        priceLabel.setText(cartItemPriceString);
+        
+     	qtyPricePanel.add(quantityLabel,BorderLayout.CENTER);
+     	qtyPricePanel.add(priceLabel,BorderLayout.SOUTH);
+     	
+     
+     productPanel.add(imageLabel,BorderLayout.LINE_START);
+     productPanel.add(nameLabel,BorderLayout.CENTER);
+     productPanel.add(qtyPricePanel,BorderLayout.LINE_END);
+     productPanel.setPreferredSize(new Dimension(220,120));
+     productPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+ productPanels.add(productPanel);
+	}
+	public Order loadOrder() throws ParseException //dummy data, later retrieve from database
+	{
+		ProductCategory category = new ProductCategory(1, "Sample Category");
+		
+		
+        // Sample products
+        Product product1 = new Product(1, "Product 1", "Description 1", 19.99, 10, category, "/resources/productImage/White Bear.jpg");
+        Product product2 = new Product(2, "Product 2", "Description 2", 29.99, 15, category, "/resources/productImage/White Bear.jpg");
+        Product product3 = new Product(3, "Product 3", "Description 3", 39.99, 20, category, "/resources/productImage/White Bear.jpg");
+
+        // Create CartItem instances with quantities
+        CartItem cartItem1 = new CartItem(2, product1);
+        CartItem cartItem2 = new CartItem(1, product2);
+        CartItem cartItem3 = new CartItem(3, product3);
+
+        List<CartItem> cartItems = new ArrayList<>();
+        // Add CartItem instances to the list
+        cartItems.add(cartItem1);
+        cartItems.add(cartItem2);
+        cartItems.add(cartItem3);
+        
+        
+        Address address = new Address(1,"Jln Penpal",12345,"Melaka");
+        Customer cus = new Customer();
+        cus.setCustomerId(100);
+        cus.setCustomerName("ALI");
+        cus.setCustomerAddress(address);
+        
+        String sDate1="31/12/2023";  
+        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);  
+        System.out.println(sDate1+"\t"+date1);  
+        Order order = new Order(1,date1, true,true, 400, cus,cartItems);
+        
+      
+        return order;
+		   
 	}
 
 	@Override
