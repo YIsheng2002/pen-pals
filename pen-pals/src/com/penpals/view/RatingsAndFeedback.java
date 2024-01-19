@@ -45,9 +45,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	//center panel
 	private JPanel contentPane;
 		private JPanel commentPanels;
-		
 			private JPanel commentPanel;
-			
 				private  JPanel productPanel;
 					private JLabel imageLabel;
 						private ImageIcon productImage;
@@ -81,14 +79,15 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	public RatingsAndFeedback(Order order) {
 
 		this.order = order;
-		initializeComponents(order);
+		init(order);
 	}
 	
 	//private void initializeComponents(Order orders)
-	private void initializeComponents(Order order)
+	private void init(Order order)
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900,700);
+		setTitle("Penpals Gift Shop");
 			//set frame min size
 	    setMinimumSize(new Dimension(900,700));
 
@@ -200,7 +199,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 			//title label
 			label = new JLabel();
 			label.setText("		Ratings and Feedbacks");
-		add(label,BorderLayout.NORTH);
+		getContentPane().add(label,BorderLayout.NORTH);
 		
 			//submit button
 			submitButton = new JButton();

@@ -1,6 +1,7 @@
 //import com.penpals.db.MyDatabase;
 import java.util.Scanner;
 import com.penpals.controller.CustomerController;
+import com.penpals.db.MyDatabase;
 import com.penpals.model.Customer;
 import com.penpals.view.Login;
 
@@ -45,6 +46,10 @@ public class App {
         }
 
         scanner.close();**/
+        //Login login = new Login();
+        //login.setVisible(true);
+        //System.out.println("Hello, World!");
+        //MyDatabase.doConnection();
         Login login = new Login();
         login.setVisible(true);
     }

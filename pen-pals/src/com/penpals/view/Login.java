@@ -27,16 +27,25 @@ import java.awt.Dimension;
 
 public class Login extends JFrame implements MouseListener, ActionListener{
 
+	
 	private static final long serialVersionUID = 1L;
-	private JLabel contentPane;
-	private JPanel textPanel;
-	private JPanel fieldPanel;
+	//north panel
 	private JLabel title;
-	private JLabel usernameLabel;
-	private JLabel passwordLabel;
-	private JTextField usernameField;
-	private JPasswordField passwordField;
-	private Dimension minimumSize;
+	
+	//west panel
+	private JPanel textPanel;
+		private JLabel usernameLabel;
+		private JLabel passwordLabel;
+	
+	//content Pane, set background picture
+	private JLabel contentPane;
+	
+	//center panel
+	private JPanel fieldPanel;
+		private JTextField usernameField;
+		private JPasswordField passwordField;
+
+	//south panel
 	private JPanel southPanel;
 	private JButton loginButton;
 	private JButton registerButton;
@@ -52,14 +61,11 @@ public class Login extends JFrame implements MouseListener, ActionListener{
 		
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		getContentPane().setLayout(new BorderLayout(10, 10));
-		
-		setTitle("Gift Shop");
-		
-		
-		minimumSize = new Dimension(450, 250); // Adjust the dimensions as needed
-        setMinimumSize(minimumSize);
+		setTitle("Penpals Gift Shop");
+        setMinimumSize(new Dimension(450, 250));
+        
+        
         try {
 			icon = new ImageIcon(Login.class.getResource("/resources/uiSymbol/loginPage.png"));
 			scaledImage = icon.getImage().getScaledInstance(450,250, Image.SCALE_SMOOTH);
@@ -68,81 +74,83 @@ public class Login extends JFrame implements MouseListener, ActionListener{
 		}
         
         //set background picture
-        contentPane = new JLabel("",new ImageIcon(scaledImage),JLabel.CENTER);
-		
+	    contentPane = new JLabel("",new ImageIcon(scaledImage),JLabel.CENTER);
 		contentPane.setSize(450,250);
 		contentPane.setOpaque(false);
 		setContentPane(contentPane);
-		setLayout(new BorderLayout(0,0));
+		
 
 	
-		title = new JLabel("Login",SwingConstants.CENTER);
-		title.setFont(new Font("Lucida Grande", Font.BOLD, 16));
-		title.setPreferredSize(new Dimension(450,30));
+			title = new JLabel("Login",SwingConstants.CENTER);
+			title.setFont(new Font("Lucida Grande", Font.BOLD, 16));
+			title.setPreferredSize(new Dimension(450,30));
 	
 		add(title,BorderLayout.NORTH);
 		
-		//creation of a panel to contain Jlabels
-		textPanel = new JPanel();
-		textPanel.setPreferredSize(new Dimension(70,250));
+			//creation of a panel to contain Jlabels
+			textPanel = new JPanel();
+			textPanel.setPreferredSize(new Dimension(70,250));
+				//username label
+				usernameLabel = new JLabel();
+				usernameLabel.setText("Username");
+				usernameLabel.setPreferredSize(new Dimension(70,30));
+				usernameLabel.setHorizontalAlignment(4);
+				
+				//password label
+				passwordLabel = new JLabel();
+				passwordLabel.setText("Password ");
+				passwordLabel.setPreferredSize(new Dimension(70,30));
+				passwordLabel.setHorizontalAlignment(4);
+			
+			textPanel.add(usernameLabel);
+			textPanel.add(passwordLabel);
+			textPanel.setOpaque(false);
+			
 		add(textPanel,BorderLayout.WEST);
 		
 
-		//username label
-		usernameLabel = new JLabel();
-		usernameLabel.setText("Username");
-		usernameLabel.setPreferredSize(new Dimension(70,30));
-		usernameLabel.setHorizontalAlignment(4);
-	
-		textPanel.add(usernameLabel);
-		textPanel.setOpaque(false);
-		
-		
-		//password label
-		passwordLabel = new JLabel();
-		passwordLabel.setText("Password ");
-		passwordLabel.setPreferredSize(new Dimension(70,30));
-		passwordLabel.setHorizontalAlignment(4);
-		textPanel.add(passwordLabel);
-		
-		
-		//TextField Panel Container
-		fieldPanel = new JPanel();
-		fieldPanel.setOpaque(false);
-		fieldPanel.setPreferredSize(new Dimension(100,300));
+			//TextField Panel Container
+			fieldPanel = new JPanel();
+			fieldPanel.setOpaque(false);
+			fieldPanel.setPreferredSize(new Dimension(100,300));
+				//username textfield
+				usernameField = new JTextField();
+				usernameField.setPreferredSize(new Dimension(200,30));
+				
+				//password field
+				passwordField = new JPasswordField();
+				passwordField.setPreferredSize(new Dimension(200,30));
+				
+			fieldPanel.add(usernameField);
+			fieldPanel.add(passwordField);
+			
 		add(fieldPanel,BorderLayout.CENTER);
 		
-		//username textfield
-		usernameField = new JTextField();
-		usernameField.setPreferredSize(new Dimension(200,30));
-		fieldPanel.add(usernameField);
-		
-		//password field
-		passwordField = new JPasswordField();
-		passwordField.setPreferredSize(new Dimension(200,30));
-		fieldPanel.add(passwordField);
+				
 
-		//South panel that consist buttons
-		southPanel = new JPanel();
-		
-		//log in button
-		loginButton = new JButton();
-		loginButton.setText("Login");
-		loginButton.addActionListener(this);
-		loginButton.addMouseListener(this);
-		southPanel.add(loginButton);
-		southPanel.setOpaque(false);
-		
-		registerButton = new JButton();
-		registerButton.setText("Register");
-		registerButton.addActionListener(this);
-		registerButton.addMouseListener(this);
-		southPanel.add(registerButton);
+			//South panel that consist buttons
+			southPanel = new JPanel();
+			
+				//log in button
+				loginButton = new JButton();
+				loginButton.setText("Login");
+				loginButton.addActionListener(this);
+				loginButton.addMouseListener(this);
+				
+				registerButton = new JButton();
+				registerButton.setText("Register");
+				registerButton.addActionListener(this);
+				registerButton.addMouseListener(this);
+				
+			southPanel.add(loginButton);
+			southPanel.add(registerButton);
+			southPanel.setOpaque(false);
 		
 		add(southPanel,BorderLayout.PAGE_END);
-		setMaximumSize(minimumSize);
+	
 		contentPane.setOpaque(false);
-
+		
+		setResizable(false);
 		setVisible(true);
 	}
 
@@ -209,38 +217,40 @@ public class Login extends JFrame implements MouseListener, ActionListener{
 		else
 		{
 		
-			try {
+//			try {
 				String username = usernameField.getText();
 				String password = passwordField.getText();
 				
-				//backend??
-				Connection con = MyDatabase.doConnection();
-				Statement stm = con.createStatement();
-				String sql = "SELECT * FROM account WHERE username = '" + username + "' AND password = '" + password +"'";
+				//call login function
 				
-				ResultSet rs = stm.executeQuery(sql);
-				if(rs.next())
-				{
-					dispose();
-					//jump to browse product
-					BrowseProduct frame = new BrowseProduct();
-					frame.setVisible(true);
-				}
-				else
-				{
-
-					usernameField.setText("");
-					passwordField.setText("");
-				}
-				con.close();
-				
-			}catch(SQLException err){
-				JOptionPane.showMessageDialog(null,err.getMessage());
-				
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(null,e1.getMessage());
-			}
+//				//backend??
+//				Connection con = MyDatabase.doConnection();
+//				Statement stm = con.createStatement();
+//				String sql = "SELECT * FROM account WHERE username = '" + username + "' AND password = '" + password +"'";
+//				
+//				ResultSet rs = stm.executeQuery(sql);
+//				if(rs.next())
+//				{
+//					dispose();
+//					//jump to browse product
+//					BrowseProduct frame = new BrowseProduct();
+//					frame.setVisible(true);
+//				}
+//				else
+//				{
+//
+//					usernameField.setText("");
+//					passwordField.setText("");
+//				}
+//				con.close();
+////				
+//			}catch(SQLException err){
+//				JOptionPane.showMessageDialog(null,err.getMessage());
+//				
+//			} catch (ClassNotFoundException e1) {
+//				// TODO Auto-generated catch block
+//				JOptionPane.showMessageDialog(null,e1.getMessage());
+//			}
 		}
 	}
 	
