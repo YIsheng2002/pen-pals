@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,9 +29,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import com.penpals.model.CartItem;
+import com.penpals.model.Customer;
 import com.penpals.model.Product;
 
-public class ProductPage extends JFrame implements MouseListener, ActionListener{
+public class ProductPageGui extends JFrame implements MouseListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JScrollPane scrollableBrowseArea;
@@ -69,17 +72,25 @@ public class ProductPage extends JFrame implements MouseListener, ActionListener
 	private JPanel southPanel;
 		private JButton addToCartButton;
 		private JButton buyNowButton;
+		
+		
+private Customer cus;
+private Product product;
+private BrowseProductGui callingFrame;
+
 	/**
 	 * Create the frame.
 	 */
 	
-	public ProductPage(Product product) { 
-		
-		init(product);
+	public ProductPageGui(BrowseProductGui callingFrame,Customer cus,Product product) { 
+		this.cus = cus;
+		this.product = product;
+		this.callingFrame = callingFrame;
+		init(cus,product);
 		 
 	}
 	
-	private void init(Product product) 
+	private void init(Customer cus,Product product) 
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 1000, 900, 700);
@@ -91,8 +102,8 @@ public class ProductPage extends JFrame implements MouseListener, ActionListener
 			contentPane.setLayout(new BorderLayout(0, 0));
 		
 			//Image Label
-	        //resizedIcon = createResizedIcon(product.getImagePath(), 700, 500); //uncomment it later
-				resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
+	        resizedIcon = createResizedIcon(product.getProductImageURL(), 700, 500); //uncomment it later
+//				resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
 	        imageLabel = new JLabel(resizedIcon);
 	        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 	        imageLabel.setVerticalAlignment(JLabel.CENTER);
@@ -111,8 +122,8 @@ public class ProductPage extends JFrame implements MouseListener, ActionListener
 		        pricePanel = new JPanel(new FlowLayout(FlowLayout.LEADING,5,0));
 		        pricePanel.setBackground(new Color(235, 217, 209));
 		        
-			        //double price = product.getPrice(); //uncomment it later
-			        double price = 123.479; 					//delete it later
+			        double price = product.getProductPrice(); 
+			  
 			        
 			        // Format the number to 2 decimal price
 			        DecimalFormat df = new DecimalFormat("#.00");
@@ -145,27 +156,29 @@ public class ProductPage extends JFrame implements MouseListener, ActionListener
 			        String name = product.getProductName(); 
 		        productNameLabel = new JLabel(name);
 		        productNameLabel.setFont(new Font("Arial", Font.PLAIN, 21));
+		        productNameLabel.setBorder(new EmptyBorder(10, 5, 5, 5));
 	        
 	        
 		        //Description label
 		        descriptionLabel = new JLabel("Description:");
 		        descriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		        descriptionLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
 	        
 	        
 		        //String label
-		       // String description = product.getDescription();  //uncommment it later
-		        String description = "This is description blahhhhhhhhhhhhhhhhh"; //delete it later
+		        String description = product.getProductDescription();  
+
 		        productDescriptionLabel = new JLabel(description);
 		        productDescriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-	        
+		        productDescriptionLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
 	
 		        //add stock number
-		        //int stock = product.getStock(); //uncomment it later
-		        int stock = 100;//delete it later
+		        int stock = product.getProductStockQuantity();
 		        String stockString =  String.valueOf(stock);
 		        stockString = "Stock: " + stockString;
 		        stockLabel = new JLabel(stockString);
 		        stockLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 14));
+		        stockLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
         
 	        centerPanel.add(pricePanel);
 	        centerPanel.add(productNameLabel);
@@ -220,7 +233,7 @@ public class ProductPage extends JFrame implements MouseListener, ActionListener
 		            ratingPanel.add(ratingsLabel);
 		            
 		            //display star based on ratings 
-		            for(int i = 1 ; i <= ratings ; i++)
+		            for(int i = 1 ; i <= 5 ; i++)
 		            {
 			            	starLabel = new JLabel();
 			            		starIcon = createResizedIcon("/resources/uiSymbol/ratingStar.png",18,12);
@@ -279,6 +292,7 @@ public class ProductPage extends JFrame implements MouseListener, ActionListener
 		        buyNowButton = new JButton();
 		        buyNowButton.setText("Buy Now");
 		        buyNowButton.addMouseListener(this);
+		        buyNowButton.addActionListener(this);
 	        
 	        southPanel.add(addToCartButton);
 	        southPanel.add(buyNowButton);
@@ -314,23 +328,45 @@ public class ProductPage extends JFrame implements MouseListener, ActionListener
 		// TODO Auto-generated method stub
 		if(e.getSource()==addToCartButton)
 		{
-			//add to cart
+			//add to cart (controller function)
+			
 			JOptionPane.showMessageDialog(null, "Product is added to cart successfully.","Add To Cart", JOptionPane.INFORMATION_MESSAGE);
+			
 		}
 		else if(e.getSource()==buyNowButton)
 		{
 			//jump to buy now page
+			String qtyString = JOptionPane.showInputDialog("Enter quantity");
+						
+			try
+			{
+				int qty = Integer.parseInt(qtyString);
+				CartItem item = new CartItem(qty,product);
+				//pass as a cart item list
+				List<CartItem> itemList = new ArrayList<>();
+				itemList.add(item);
+				dispose();
+				CheckoutGui frame = new CheckoutGui(cus,itemList,this);
+				frame.setVisible(true);
+				
+			}catch(NumberFormatException nfe)
+			{
+				JOptionPane.showMessageDialog(null, "Please enter an integer","Quantity Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	
 		else if(e.getSource()==backButton)
 		{
 			dispose();
-			BrowseProduct frame = new BrowseProduct();
-			frame.setVisible(true);
+			callingFrame.setVisible(true);
+			
 		}
 		else if(e.getSource()==cartButton)
 		{
 			//jump to cart
+			dispose();
+			CartGui frame = new CartGui(cus,this);
+			frame.setVisible(true);
 		}
 	}
 

@@ -7,17 +7,19 @@ public class Order {
     private int id;
     private Date date;
     private boolean isDelivered;
+    private boolean isCompleted;
     private double total;
     private Customer customer;
     private List<CartItem> cartItems;
 
-    public Order(int id, Date date, boolean isDelivered, double total, Customer customer, List<CartItem> cartItems) {
+    public Order(int id, Date date, boolean isDelivered, boolean isCompleted, double total, Customer customer, List<CartItem> cartItems) {
         this.id = id;
         this.date = date;
         this.isDelivered = false;
         this.total = total;
         this.customer = customer;
         this.cartItems = cartItems;
+        this.isCompleted = isCompleted;
     }
 
     public Order()
@@ -98,4 +100,12 @@ public class Order {
     {
         this.cartItems.clear();
     }
+
+	public boolean getIsCompleted() {
+		return isCompleted;
+	}
+
+	public void setIsCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
+	}
 }

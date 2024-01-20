@@ -42,17 +42,17 @@ import com.penpals.model.ProductCategory;
 import java.text.SimpleDateFormat;  
 import java.util.Date;  
 
-public class OrderTracking extends JFrame implements MouseListener, ActionListener {
+public class OrderTrackingGui extends JFrame implements MouseListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	
 	
-	private Order order;
-	
+
 	//south panel
 	private JPanel southPanel;
 		private JLabel completeLabel;
 		private JButton completeOrderButton;
+		private JButton printReceiptBtn;
 	
 	//north panel
 	private JPanel northPanel;
@@ -95,32 +95,31 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 						
 	
 
+private Customer cus;
+private Order order;
 
 
 
 	/**
 	 * Create the frame.
 	 */
-	public OrderTracking() {   
-//		this.order = order;
-		init();
+	public OrderTrackingGui(Customer cus,Order order) {   
+		this.cus = cus;
+		this.order = order;
+		init(order);
 	}
 	
 
 
-	private void init() 
+	private void init(Order order) 
 	{
-		try {
-			order = loadOrder();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		//frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setLayout(new BorderLayout());
 	    setMinimumSize(new Dimension(900,700));
+	    setTitle("Penpals Gift Shop");
 		     
 		   
 		    contentPane = new JPanel();
@@ -245,65 +244,42 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 		     northPanel.add(backButton);
 	     add(northPanel,BorderLayout.PAGE_START);
 	    
+	     
+	     	//southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	     	southPanel = new JPanel(new BorderLayout());
+     	
+	     		
 			//complete order button add to frame (exist only if order haven't completed)
 			if(!order.getIsCompleted())
 			{
-					southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-					
 						completeOrderButton = new JButton();
 						completeOrderButton.setText("Complete Order");	
 						completeOrderButton.addActionListener(this);
 						completeOrderButton.addMouseListener(this);
 						
-					southPanel.add(completeOrderButton);
-					
-				add(southPanel,BorderLayout.SOUTH);
+			southPanel.add(completeOrderButton,BorderLayout.PAGE_START);
 			}
 			else
 			{
-					southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-					
 						completeLabel = new JLabel();
 						completeLabel.setText("The order is completed.");	
 						completeLabel.setHorizontalAlignment(JLabel.CENTER);
 						
-					southPanel.add(completeLabel);
-				add(southPanel,BorderLayout.SOUTH);
+			southPanel.add(completeLabel,BorderLayout.PAGE_START);
 			}
+			
+			 printReceiptBtn = new JButton("Print Receipt");
+			southPanel.add(printReceiptBtn,BorderLayout.CENTER);
+			
+			
+		add(southPanel,BorderLayout.SOUTH);
 		    
 	    setTitle("Penpals Gift Shop");
 	    setVisible(true);
     
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if(e.getSource()==completeOrderButton)
-		{
-		
-			int result = JOptionPane.showConfirmDialog(null,"Are you sure to complete order? Please ensure you have received the product(s) and are satisfied with their condition.","Complete Order",JOptionPane.YES_NO_OPTION);
-			if(result == 0)
-			{
-				JOptionPane.showMessageDialog(null,"The order is completed.");
-				//set status as completed
-				//order.setIsCompleted(true);
-				
-				dispose();
-				//open a new frame with completed order
-				//OrderTracking frame = new OrderTracking(order); //uncomment it 
-				//PLEASE CHECK to confirm the complete order button disappear when order is completed
-				RatingsAndFeedback frame = new RatingsAndFeedback(order); //delete it later
-				frame.setVisible(true);
-			}
-		}
-		else if(e.getSource()==backButton)
-		{
-			dispose();
-			UserProfile frame = new UserProfile();
-			frame.setVisible(true);
-		}
-	}
+	
 
 	private ImageIcon createResizedIcon(String imagePath, int width, int height) {
 	    
@@ -370,43 +346,6 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 
  productPanels.add(productPanel);
 	}
-	public Order loadOrder() throws ParseException //dummy data, later retrieve from database
-	{
-		ProductCategory category = new ProductCategory(1, "Sample Category");
-		
-		
-        // Sample products
-        Product product1 = new Product(1, "Product 1", "Description 1", 19.99, 10, category, "/resources/productImage/White Bear.jpg");
-        Product product2 = new Product(2, "Product 2", "Description 2", 29.99, 15, category, "/resources/productImage/White Bear.jpg");
-        Product product3 = new Product(3, "Product 3", "Description 3", 39.99, 20, category, "/resources/productImage/White Bear.jpg");
-
-        // Create CartItem instances with quantities
-        CartItem cartItem1 = new CartItem(2, product1);
-        CartItem cartItem2 = new CartItem(1, product2);
-        CartItem cartItem3 = new CartItem(3, product3);
-
-        List<CartItem> cartItems = new ArrayList<>();
-        // Add CartItem instances to the list
-        cartItems.add(cartItem1);
-        cartItems.add(cartItem2);
-        cartItems.add(cartItem3);
-        
-        
-        Address address = new Address(1,"Jln Penpal",12345,"Melaka");
-        Customer cus = new Customer();
-        cus.setCustomerId(100);
-        cus.setCustomerName("ALI");
-        cus.setCustomerAddress(address);
-        
-        String sDate1="31/12/2023";  
-        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);  
-        System.out.println(sDate1+"\t"+date1);  
-        Order order = new Order(1,date1, true,true, 400, cus,cartItems);
-        
-      
-        return order;
-		   
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -444,6 +383,35 @@ public class OrderTracking extends JFrame implements MouseListener, ActionListen
 			setCursor(Cursor.getDefaultCursor());
 		}
 		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==completeOrderButton)
+		{
+		
+			int result = JOptionPane.showConfirmDialog(null,"Are you sure to complete order? Please ensure you have received the product(s) and are satisfied with their condition.","Complete Order",JOptionPane.YES_NO_OPTION);
+			if(result == JOptionPane.YES_OPTION)
+			{
+				JOptionPane.showMessageDialog(null,"The order is completed.");
+				//set status as completed
+				//order.setIsCompleted(true);
+				
+				dispose();
+				//open a new frame with completed order
+				//OrderTracking frame = new OrderTracking(order); //uncomment it 
+				//PLEASE CHECK to confirm the complete order button disappear when order is completed
+				RatingsAndFeedbackGui frame = new RatingsAndFeedbackGui(cus,order); //delete it later
+				frame.setVisible(true);
+			}
+		}
+		else if(e.getSource()==backButton)
+		{
+			dispose();
+			OrderHistoryGui frame = new OrderHistoryGui(cus);
+			frame.setVisible(true);
+		}
 	}
 
 }

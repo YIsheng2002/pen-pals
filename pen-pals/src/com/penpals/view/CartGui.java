@@ -35,15 +35,16 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import com.penpals.model.CartItem;
+import com.penpals.model.Customer;
 import com.penpals.model.Order;
 import com.penpals.model.Product;
 import com.penpals.model.ProductCategory;
 
-public class Cart extends JFrame implements  MouseListener, ActionListener{
+public class CartGui extends JFrame implements  MouseListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
-	List<CartItem> selectedItems=new ArrayList<>();;
-	List<CartItem> cartItems=new ArrayList<>();;
+	List<CartItem> selectedItems=new ArrayList<>();
+	List<CartItem> cartItems=new ArrayList<>();
 	Order order;
 	double totalPrice = 0;
 	DecimalFormat df ;
@@ -95,19 +96,22 @@ public class Cart extends JFrame implements  MouseListener, ActionListener{
 		private JPanel southRightPanel;
 			private JButton checkOutButton;
 			
-				
-
+	private Customer cus;
+private JFrame callingFrame;
 	/**
 	 * Create the frame.
 	 */
-	public Cart() {
-		init();
+	public CartGui(Customer cus,JFrame callingFrame) {
+		this.cus = cus;
+		this.callingFrame = callingFrame;
+		init(cus);
 		
 	}
 	
-	public void init() {
-		cartItems = loadCartItems();
-		
+	public void init(Customer cus) {
+		//cartItems = loadCartItems();
+		cartItems = cus.getCustomerShoppingCart().getShoppingCartItems();
+		setBounds(100, 100, 500, 300);
 		setTitle("Penpals Gift Shop");
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -152,6 +156,7 @@ public class Cart extends JFrame implements  MouseListener, ActionListener{
 				cartItemPanel = createProductPanel(cartItem);
 				cartItemsPanel.add(cartItemPanel);
 			}
+			
 			
 			 scrollableBrowseArea = new JScrollPane(cartItemsPanel);
 		     scrollableBrowseArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -236,6 +241,7 @@ public class Cart extends JFrame implements  MouseListener, ActionListener{
 		    
 			//east
 			qtyPricePanel = new JPanel(new BorderLayout());
+			qtyPricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 				qtyPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 			
 				int qty  = cartItem.getCartItemQuantity();
@@ -330,8 +336,8 @@ public class Cart extends JFrame implements  MouseListener, ActionListener{
 	public void checkOut(List<CartItem> checkOutItem)
 	{
 		dispose();
-		//Payment frame = new Payment(checkOutItem);
-		//frame.setVisible(true);
+		CheckoutGui frame = new CheckoutGui(cus,checkOutItem,this);
+		frame.setVisible(true);
 	}
 	
 	public List<CartItem> loadCartItems()  //dummy data , call controller function later
@@ -435,18 +441,9 @@ public class Cart extends JFrame implements  MouseListener, ActionListener{
 			}
 			else
 			{
-				//for testing only , delete it later
-				System.out.println("selectedItems List ");
-				for(CartItem cartItem:selectedItems )
-				{
-					
-					System.out.println(cartItem.getCartItemProduct().getProductName());
-					System.out.println(cartItem.getCartItemQuantity());
-				}
 				//pass to checkout page
 				checkOut(selectedItems);
 			}
-			
 			
 		}
 		else if(e.getSource()==manageButton)
@@ -474,9 +471,8 @@ public class Cart extends JFrame implements  MouseListener, ActionListener{
 						{
 							//remove cartItem from database, cartItem as parameter
 						}
-						
 						dispose();
-						Cart frame = new Cart();
+						CartGui frame = new CartGui(cus,callingFrame);
 						frame.setVisible(true);
 					}
 					
@@ -487,8 +483,7 @@ public class Cart extends JFrame implements  MouseListener, ActionListener{
 		else if(e.getSource()==backButton)
 		{
 			dispose();
-			BrowseProduct frame = new BrowseProduct();
-			frame.setVisible(true);
+			callingFrame.setVisible(true);
 		}
 	}
 }

@@ -1,11 +1,14 @@
 import com.penpals.db.MyDatabase;
-import com.penpals.view.Login;
+import com.penpals.view.CartGui;
+import com.penpals.view.LoginGui;
+import com.penpals.view.OrderTrackingGui;
+import com.penpals.view.PaymentTypeGui;
+import com.penpals.view.ProductPageGui;
+import com.penpals.view.UserPageGui;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
-        MyDatabase.doConnection();
-        Login login = new Login();
-        login.setVisible(true);
+    	LoginGui frame = new LoginGui();
+        frame.setVisible(true);
     }
 }

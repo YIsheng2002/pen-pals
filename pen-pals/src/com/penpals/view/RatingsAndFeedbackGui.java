@@ -33,10 +33,11 @@ import javax.swing.border.EmptyBorder;
 
 import com.penpals.db.MyDatabase;
 import com.penpals.model.CartItem;
+import com.penpals.model.Customer;
 import com.penpals.model.Order;
 
 
-public class RatingsAndFeedback extends JFrame  implements ActionListener, MouseListener{
+public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -65,7 +66,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 		
 		private  List<CartItem> cartItems;
 		private Order order;
-	
+		private Customer cus;
 	//North label
 	private JLabel label;
 	
@@ -76,8 +77,8 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	 * Create the frame.
 	 */
 	//public RatingsAndFeedback(Order order) {
-	public RatingsAndFeedback(Order order) {
-
+	public RatingsAndFeedbackGui(Customer cus,Order order) {
+		this.cus = cus;
 		this.order = order;
 		init(order);
 	}
@@ -90,6 +91,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 		setTitle("Penpals Gift Shop");
 			//set frame min size
 	    setMinimumSize(new Dimension(900,700));
+	    
 
 			contentPane = new JPanel();
 			contentPane.setBorder(new EmptyBorder(5, 10, 5, 10));
@@ -111,6 +113,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 						        	productImage = createResizedIcon(cartItem.getCartItemProduct().getProductImageURL(), 100,100); 
 						        imageLabel.setIcon(productImage);
 						        imageLabel.setVerticalAlignment(JLabel.CENTER);
+						        imageLabel.setBorder(new EmptyBorder(5, 10, 5, 10));
 						        
 					        productPanel.add(imageLabel,BorderLayout.LINE_START);
 						        
@@ -155,6 +158,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 					     		//Ratings label
 					     		ratingLabel = new JLabel();
 					     		ratingLabel.setText("Ratings :");
+					     		ratingLabel.setBorder(new EmptyBorder(5, 10, 5, 10));
 					     		
 					     		//Ratings text field
 					     		ratingTextField = new JTextField();
@@ -175,10 +179,13 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 					     		//Feedback label
 						     	feedbackLabel = new JLabel();
 						     	feedbackLabel.setText("Feedback (Maximum 100 characters) :");
+						     	feedbackLabel.setBorder(new EmptyBorder(5, 10, 5, 10));
+						     	
 					     		
 					     		//Ratings text field
 					     		 feedbackTextField = new JTextField();
 					     		feedbackTextField.setColumns(70);
+					     		feedbackTextField.setBorder(new EmptyBorder(5, 10, 5, 10));
 					     		feedbackTextField.addActionListener(this);
 					     		
 				     		feedbackPanel.add(feedbackLabel,BorderLayout.NORTH);
@@ -188,6 +195,7 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 			     		commentPanel.add(ratingPanel,BorderLayout.CENTER);
 			     		commentPanel.add(feedbackPanel,BorderLayout.SOUTH);
 			     		commentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+			     		
 				     	
 			     	commentPanels.add(commentPanel);
 				     
@@ -297,27 +305,27 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 	    }
 
 	    // If all validations pass, insert into database
-	    try {
-            Connection connection = null;
-			
-            try {
-				connection = MyDatabase.doConnection();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            int j = 0;
-            for (int i = 0; i < commentPanels.getComponentCount(); i++) {
-                Component component = commentPanels.getComponent(i);
-                if (component instanceof JPanel) {
-                    JPanel commentPanel = (JPanel) component;
-
-                    // Retrieve ratingTextField and feedbackTextField for each product
-                    JTextField ratingTextField = getRatingTextField(commentPanel);
-                    JTextField feedbackTextField = getFeedbackTextField(commentPanel);
-                    
-                    LocalDate currentDate = java.time.LocalDate.now();
-                    String date = currentDate.toString();
+//	    try {
+//            Connection connection = null;
+//			
+//            try {
+//				connection = MyDatabase.doConnection();
+//			} catch (ClassNotFoundException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//            int j = 0;
+//            for (int i = 0; i < commentPanels.getComponentCount(); i++) {
+//                Component component = commentPanels.getComponent(i);
+//                if (component instanceof JPanel) {
+//                    JPanel commentPanel = (JPanel) component;
+//
+//                    // Retrieve ratingTextField and feedbackTextField for each product
+//                    JTextField ratingTextField = getRatingTextField(commentPanel);
+//                    JTextField feedbackTextField = getFeedbackTextField(commentPanel);
+//                    
+//                    LocalDate currentDate = java.time.LocalDate.now();
+//                    String date = currentDate.toString();
                     
                     // Validate feedback and rating (same as before)
 
@@ -335,20 +343,20 @@ public class RatingsAndFeedback extends JFrame  implements ActionListener, Mouse
 //                    } catch (SQLException e) {
 //                        e.printStackTrace(); // Handle the exception as needed
 //                    }
-                }
-            }
-            connection.close();
+//                }
+//            }
+          //  connection.close();
             JOptionPane.showMessageDialog(null, "Ratings and feedbacks are submitted.");
             
             dispose();
-            OrderTracking frame = new OrderTracking(order);
+            OrderTrackingGui frame = new OrderTrackingGui(cus,order);
             frame.setVisible(true);
             
             
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception as needed
-        }
-	    
+//        } catch (SQLException e) {
+//            e.printStackTrace(); // Handle the exception as needed
+//        }
+//	    
 
 	}
 

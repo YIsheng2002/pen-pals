@@ -9,18 +9,39 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import com.penpals.model.Address;
+import com.penpals.model.CartItem;
+import com.penpals.model.Coupon;
+import com.penpals.model.Customer;
+import com.penpals.model.Order;
+import com.penpals.model.Product;
+import com.penpals.model.ProductCategory;
+import com.penpals.model.ShoppingCart;
+
 import java.awt.Font;
 
-public class UserPage extends JFrame implements ActionListener, MouseListener{
+public class UserPageGui extends JFrame implements ActionListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
+
+		
+	
+	private JPanel northPanel;
+		private JButton backButton;
+			private ImageIcon backIcon;
 	
 	private JPanel contentPane;
 		
@@ -42,18 +63,20 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 				private ImageIcon cartIcon;
 				private JButton cartButton;
 			
-		
+	private Customer cus;
 		
 
 	/**
 	 * Create the frame.
 	 */
-	public UserPage ()
+	public UserPageGui (Customer cus)
 	{
-		init();
+		this.cus = cus;
+		init(cus);
 	}
 	
-	public void init() {
+	public void init(Customer cus) {
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 300);
@@ -63,6 +86,14 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 		contentPane.setLayout(new BorderLayout(5,10));
 		setContentPane(contentPane);
 		setResizable(false);
+		
+			northPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+				backIcon = createResizedIcon("/resources/uiSymbol/back.png",20,20);
+				backButton = new JButton(backIcon);
+				backButton.addMouseListener(this);
+				backButton.addActionListener(this);
+			northPanel.add(backButton);
+		add(northPanel,BorderLayout.PAGE_START);
 		
 			userPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			
@@ -120,8 +151,8 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 		        cartPanel.add(cartButton);
 	        centerPanel.add(cartPanel,BorderLayout.PAGE_END);
 	        
-        contentPane.add(userPanel,BorderLayout.PAGE_START);
-        contentPane.add(centerPanel,BorderLayout.CENTER);
+        contentPane.add(userPanel,BorderLayout.CENTER);
+        contentPane.add(centerPanel,BorderLayout.PAGE_END);
         pack();
         
 	}
@@ -134,6 +165,8 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 	    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 	    return new ImageIcon(resizedImage);
 	}
+	
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -141,7 +174,7 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 		if(e.getSource()==userImageLabel || e.getSource()==usernameLabel)
 		{
 			dispose();
-			UserProfile frame = new UserProfile();
+			UserProfileGui frame = new UserProfileGui(cus);
 			frame.setVisible(true);
 		}
 	}
@@ -161,7 +194,7 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel)
+		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
@@ -170,7 +203,7 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel)
+		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getDefaultCursor());
 		}
@@ -182,12 +215,21 @@ public class UserPage extends JFrame implements ActionListener, MouseListener{
 		if(e.getSource()==orderHistoryButton)
 		{
 			dispose();
-			//jump to orderlist page
+			OrderHistoryGui frame = new OrderHistoryGui(cus);
+			frame.setVisible(true);
 		}
 		else if(e.getSource()==cartButton)
 		{
 			dispose();
-			//jump to cart page
+			CartGui frame = new CartGui(cus,this);
+			frame.setVisible(true);
+		}
+		else if(e.getSource()==backButton)
+		{
+			dispose();
+			BrowseProductGui frame = new BrowseProductGui(cus);
+			frame.setVisible(true);
 		}
 	}
 }
+	
