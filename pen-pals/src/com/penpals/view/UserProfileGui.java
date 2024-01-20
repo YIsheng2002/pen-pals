@@ -10,6 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,10 +25,20 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import com.penpals.model.Address;
+import com.penpals.model.CartItem;
+import com.penpals.model.Coupon;
+import com.penpals.model.Customer;
+import com.penpals.model.Order;
+import com.penpals.model.Product;
+import com.penpals.model.ProductCategory;
+import com.penpals.model.ShoppingCart;
+
 import java.awt.Font;
 import java.awt.Color;
 
-public class UserProfile extends JFrame implements ActionListener, MouseListener{
+public class UserProfileGui extends JFrame implements ActionListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -56,15 +70,18 @@ public class UserProfile extends JFrame implements ActionListener, MouseListener
 	private JPanel northPanel;
 		private JButton backButton;
 			private ImageIcon backIcon;
+			
+	Customer cus;
 	/**
 	 * Create the frame.
 	 */
-	public UserProfile () {
-		init();
+	public UserProfileGui (Customer cus) {
+		this.cus = cus;
+		init(cus);
 	}
 		
 		
-	public void init() {
+	public void init(Customer cus) {
 		 //Frame
 		setBounds(100, 100, 450, 550);
 		
@@ -143,37 +160,37 @@ public class UserProfile extends JFrame implements ActionListener, MouseListener
 					passwordFieldLabel.setPreferredSize(new Dimension(200,30));
 					passwordFieldLabel.addMouseListener(this);
 	
-					nameFieldLabel = new JLabel("Name");
+					nameFieldLabel = new JLabel(cus.getCustomerName());
 					nameFieldLabel.setForeground(new Color(96, 104, 97));
 					nameFieldLabel.setPreferredSize(new Dimension(200,30));
 					nameFieldLabel.addMouseListener(this);
 					
-					telNumberFieldLabel = new JLabel("telNo");
+					telNumberFieldLabel = new JLabel(cus.getCustomerTelNumber());
 					telNumberFieldLabel.setForeground(new Color(96, 104, 97));
 					telNumberFieldLabel.setPreferredSize(new Dimension(200,30));
 					telNumberFieldLabel.addMouseListener(this);
 					
-					emailFieldLabel = new JLabel("Email");
+					emailFieldLabel = new JLabel(cus.getCustomerEmail());
 					emailFieldLabel.setForeground(new Color(96, 104, 97));
 					emailFieldLabel.setPreferredSize(new Dimension(200,30));
 					emailFieldLabel.addMouseListener(this);
 					
-					addressNumberFieldLabel = new JLabel("Unit No");
+					addressNumberFieldLabel = new JLabel(String.valueOf(cus.getCustomerAddress().getNumber()));
 					addressNumberFieldLabel.setForeground(new Color(96, 104, 97));
 					addressNumberFieldLabel.setPreferredSize(new Dimension(200,30));
 					addressNumberFieldLabel.addMouseListener(this);
 					
-					addressRoadFieldLabel = new JLabel("Road");
+					addressRoadFieldLabel = new JLabel(cus.getCustomerAddress().getRoad());
 					addressRoadFieldLabel.setForeground(new Color(96, 104, 97));
 					addressRoadFieldLabel.setPreferredSize(new Dimension(200,30));
 					addressRoadFieldLabel.addMouseListener(this);
 					
-					addressPostcodeFieldLabel = new JLabel("Postcode");
+					addressPostcodeFieldLabel = new JLabel(String.valueOf(cus.getCustomerAddress().getPostcode()));
 					addressPostcodeFieldLabel.setForeground(new Color(96, 104, 97));
 					addressPostcodeFieldLabel.setPreferredSize(new Dimension(200,30));
 					addressPostcodeFieldLabel.addMouseListener(this);
 					
-					addressStateFieldLabel = new JLabel("State");
+					addressStateFieldLabel = new JLabel(cus.getCustomerAddress().getState());
 					addressStateFieldLabel.setForeground(new Color(96, 104, 97));
 					addressStateFieldLabel.setPreferredSize(new Dimension(200,30));
 					addressStateFieldLabel.addMouseListener(this);
@@ -206,12 +223,13 @@ public class UserProfile extends JFrame implements ActionListener, MouseListener
 			     
 			 northPanel.add(backButton);
 			 
-	     add(northPanel,BorderLayout.PAGE_START);
+	    add(northPanel,BorderLayout.PAGE_START);
 		pack();
 		setVisible(true);
 		setResizable(false);
 
 	}
+
 
 	private ImageIcon createResizedIcon(String imagePath, int width, int height) {
 	    
@@ -221,6 +239,8 @@ public class UserProfile extends JFrame implements ActionListener, MouseListener
 	    Image resizedImage = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 	    return new ImageIcon(resizedImage);
 	}
+		
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -393,7 +413,7 @@ public class UserProfile extends JFrame implements ActionListener, MouseListener
 					try {
 						int postcode = Integer.parseInt(postcodeString);
 						JOptionPane.showMessageDialog(null, "Postcode is updated successfully");
-						usernameFieldLabel.setText(postcodeString);
+						addressPostcodeFieldLabel.setText(postcodeString);
 						
 					}catch(NumberFormatException nfe)
 					{
@@ -458,7 +478,7 @@ public class UserProfile extends JFrame implements ActionListener, MouseListener
 		if(e.getSource()==backButton)
 		{
 			dispose();
-			UserPage frame = new UserPage();
+			UserPageGui frame = new UserPageGui(cus);
 			frame.setVisible(true);
 		}
 	}
