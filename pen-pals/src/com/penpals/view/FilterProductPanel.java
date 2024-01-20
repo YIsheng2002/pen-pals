@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -46,15 +47,18 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 			private JTextField maxPriceField;
 			
 		private JPanel southPanel;
+			private JPanel ratingPanel;
 			private JLabel ratingsLabel;
 				private JComboBox ratingsBox;
+				
+			private JCheckBox checkBox;
 				
 			private JPanel buttonPanel;
 				private JButton resetButton;
 				private JButton applyButton;
 				
 
-		//private List<ProductCategory> categories = new ArrayList<>();
+		
 		private Integer[] ratingsArray = {1,2,3,4,5};
 		private String[] categoriesArray;
 		
@@ -134,14 +138,27 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
    			
    					
    			southPanel = new JPanel(new BorderLayout());
-   				ratingsLabel = new JLabel("Ratings Above");
-   				ratingsLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
-			southPanel.add(ratingsLabel,BorderLayout.NORTH);
-   				ratingsBox = new JComboBox(ratingsArray);
-   				ratingsBox.setBorder(new EmptyBorder(5, 35, 20, 35));
-   				ratingsBox.addActionListener(this);
+   				JPanel ratingPanel = new JPanel(new BorderLayout());
+   				
+	   				ratingsLabel = new JLabel("Ratings Above");
+	   				ratingsLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+   				ratingPanel.add(ratingsLabel,BorderLayout.PAGE_START);
+	   				
+				
+	   				ratingsBox = new JComboBox(ratingsArray);
+	   				ratingsBox.setBorder(new EmptyBorder(5, 35, 20, 35));
+	   				ratingsBox.addActionListener(this);
+   				ratingPanel.add(ratingsBox,BorderLayout.CENTER);
 
-			southPanel.add(ratingsBox,BorderLayout.CENTER);
+			southPanel.add(ratingPanel,BorderLayout.PAGE_START);
+			
+			
+				checkBox = new JCheckBox("In promotion");
+				checkBox.addMouseListener(this);
+				checkBox.addActionListener(this);
+				checkBox.setBorder(new EmptyBorder(5, 35, 20, 35));
+				
+			southPanel.add(checkBox,BorderLayout.CENTER);
 			
 				buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 				
@@ -234,6 +251,10 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 			frame.setProducts(products);
 			frame.repaintProductPanel(frame.getProducts());
 		}
+		else if(e.getSource()==checkBox)
+		{
+			//filter by promotion 
+		}
 		
 	}
 
@@ -267,7 +288,7 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton)
+		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton||e.getSource()==checkBox)
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
@@ -277,7 +298,7 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton)
+		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton||e.getSource()==checkBox)
 		{
 			setCursor(Cursor.getDefaultCursor());
 		}

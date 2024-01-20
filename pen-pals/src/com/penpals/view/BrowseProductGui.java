@@ -126,7 +126,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
         	contentPane = createContentPane();
    
             filterPanel = new FilterProductPanel(this);
-            filterPanel.setBorder(new EmptyBorder(15, 5, 450, 5));
+            filterPanel.setBorder(new EmptyBorder(15, 5, 400, 5));
 
             filterPanel.setPreferredSize(new Dimension(200,700));
 
@@ -164,7 +164,6 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 					textField.addKeyListener(this);
 					
 				northLeftPanel.add(textField);
-				
 				filterButton = new JButton("Filter");
 				filterButton.addActionListener(e -> showFilterPanel());
 				northLeftPanel.add(filterButton);
