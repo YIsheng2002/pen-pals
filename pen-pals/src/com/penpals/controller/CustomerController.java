@@ -24,20 +24,20 @@ public class CustomerController extends Controller{
         Customer customer = new Customer();
         try
         {
-            String sql = "SELECT * FROM customer WHERE Username = ? AND Password = ?";
+            String sql = "SELECT id, name, email, telNumber, username, password FROM customer WHERE username = ? AND password = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
-                customer.setCustomerId(rs.getInt("ID"));
-                customer.setCustomerName(rs.getString("Name"));
+                customer.setCustomerId(rs.getInt("id"));
+                customer.setCustomerName(rs.getString("name"));
                 customer.setCustomerEmail(rs.getString("email"));
                 customer.setCustomerTelNumber(rs.getString("telNumber"));
-                customer.setCustomerAddress(new AddressController().getAddressDetailbyId(rs.getInt("AddressID")));
-                customer.setCustomerUsername(rs.getString("Username"));
-                customer.setCustomerPassword(rs.getString("Password"));
+                customer.setCustomerAddress(new AddressController().getAddressDetailbyCustomerId(rs.getInt("id")));
+                customer.setCustomerUsername(rs.getString("username"));
+                customer.setCustomerPassword(rs.getString("password"));
             }
         } catch (SQLException err)
         {
