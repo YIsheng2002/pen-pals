@@ -4,6 +4,8 @@ import com.penpals.model.Product;
 import com.penpals.model.ProductCategory;
 import com.penpals.db.MyDatabase;
 
+import com.penpals.controller.ProductController;
+
 
 import java.awt.EventQueue;
 import java.util.ArrayList;
@@ -47,8 +49,9 @@ import java.awt.event.MouseListener;
 
 public class BrowseProductGui extends JFrame implements MouseListener, ActionListener, KeyListener{
 
+	ProductController productController = new ProductController();
 	private static final long serialVersionUID = 1L;
-	private List<Product> products = new ArrayList<>();
+	private List<Product> products= productController.getAllProduct();
 	
     private FilterProductPanel filterPanel;
 	
@@ -115,7 +118,6 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 	
 	private void init(Customer cus) {
 		
-		products = loadData();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setLayout(new BorderLayout());
 		setBounds(200, 800, 900, 700);
@@ -132,14 +134,17 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 
             filterPanel.setVisible(false);
 
+		//main content panel
         getContentPane().add(contentPane, BorderLayout.CENTER);
-        getContentPane().add(filterPanel, BorderLayout.LINE_START);
+        //side filter panel
+		getContentPane().add(filterPanel, BorderLayout.LINE_START);
 
       
-       pack();
+       //pack();
        setVisible(true);
 	}
 
+	//contentPane
 	private JPanel createContentPane()
 	{
 	    contentPane = new JPanel(new BorderLayout());
@@ -200,11 +205,10 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 	   //JPanel for products
 	    productPanel = new JPanel(new GridLayout(0, 3, 20, 50));
 	
-	   
+	   //load product list 
 	    for (Product product : products) {
 	    	productPanelItem = createProductPanel(product);
 	    	productPanel.add(productPanelItem);
-	   
 	   }
 	
 	   scrollableBrowseArea = new JScrollPane(productPanel);
@@ -257,7 +261,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
      	    @Override
      	    public void mouseClicked(MouseEvent e) {
      	    	dispose();
-     	        ProductPageGui frame = new ProductPageGui(BrowseProductGui.this,cus,product);
+     	        ProductPageGui frame = new ProductPageGui(cus,product);//BrowseProductGui.this
      	        frame.setVisible(true);
      	    }
 
@@ -350,39 +354,6 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 
 	}
 	
-	public List<Product> loadData()
-	{
-		List<Product> products = new ArrayList<>();
-		
-		ProductCategory category = new ProductCategory(1, "Electronics");
-		// Create a sample product
-        Product product1 = new Product(1, "Product 1", "Description 1", 19.99, 10, category, "/resources/productImage/White Bear.jpg");
-        Product product2 = new Product(2, "Product 2", "Description 2", 29.99, 15, category, "/resources/productImage/White Bear.jpg");
-        Product product3 = new Product(3, "Product 3", "Description 3", 39.99, 20, category, "/resources/productImage/White Bear.jpg");
-
-        Product product4 = new Product(1, "Product 1", "Description 1", 19.99, 10, category, "/resources/productImage/White Bear.jpg");
-        Product product5 = new Product(2, "Product 2", "Description 2", 29.99, 15, category, "/resources/productImage/White Bear.jpg");
-        Product product6 = new Product(3, "Product 3", "Description 3", 39.39, 20, category, "/resources/productImage/White Bear.jpg");
-        Product product7 = new Product(1, "Product 1", "Description 1", 79.99, 10, category, "/resources/productImage/White Bear.jpg");
-        Product product8 = new Product(2, "Product 2", "Description 2", 212.99, 15, category, "/resources/productImage/White Bear.jpg");
-        Product product9 = new Product(3, "Product 3", "Description 3", 329.99, 20, category, "/resources/productImage/White Bear.jpg");
-
-        Product product10 = new Product(3, "Product 3", "Description 3", 3359.99, 20, category, "/resources/productImage/White Bear.jpg");
-        
-        products.add(product3);
-        products.add(product1);
-        products.add(product2);
-        products.add(product4);
-        products.add(product5);
-        products.add(product6);
-        products.add(product7);
-        products.add(product8);
-        products.add(product9);
-        products.add(product10);
-        
-        return products;
-	}
-	
 	public List<Product> loadData2()
 	{
 		List<Product> products = new ArrayList<>();
@@ -420,7 +391,10 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 		
 		    for (Product product : products) {
 		        // Perform case-insensitive substring match
-
+				System.out.println("Product I get is");
+				System.out.println(product.getProductName());
+				System.out.println(product.getProductImageURL());
+				System.out.println(product.getProductPrice());
 		    	productPanelItem = createProductPanel(product);
 		    	productPanel.add(productPanelItem);
 		    }
@@ -452,13 +426,27 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 		{
 			if(textField.getText() != "")
 			{
+				// temperary product list
+				List <Product> tempProductList = new ArrayList<>();
 				String findKey = textField.getText();
 				textField.setText("");
-				products = loadData2();
-				repaintProductPanel(products);
+				for (Product product : products) {
+					if(product.getProductName().toLowerCase().contains(findKey.toLowerCase()))
+					{
+						if (!tempProductList.contains(product)) {
+							tempProductList.add(product);
+						}
+					}
+				}
+				if(tempProductList.isEmpty())
+				{
+					JOptionPane.showMessageDialog(this, "No product found");
+				}
+				else
+				{
+					repaintProductPanel(tempProductList);
+				}
 			}
-			
-			//products = loadProduct(findKey)
 
 		}
 	}

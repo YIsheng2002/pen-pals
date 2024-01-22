@@ -20,14 +20,14 @@ public class AddressController extends Controller{
         }
     }
 
-    public Address getAddressDetailbyId(int id)
+    public Address getAddressDetailbyCustomerId(int cusId)
     {
         Address address = new Address();
         try
         {
-            String sql = "SELECT (number, road, postcode, state) FROM address WHERE ID = ?";
+            String sql = "SELECT (number, road, postcode, state) FROM address WHERE customer_id_fk = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, cusId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {

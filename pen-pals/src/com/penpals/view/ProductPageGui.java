@@ -82,10 +82,12 @@ private BrowseProductGui callingFrame;
 	 * Create the frame.
 	 */
 	
-	public ProductPageGui(BrowseProductGui callingFrame,Customer cus,Product product) { 
+	public ProductPageGui(Customer cus, Product product) { //BrowseProductGui callingFrame
 		this.cus = cus;
 		this.product = product;
-		this.callingFrame = callingFrame;
+		//this.callingFrame = callingFrame;
+		System.out.println(product.getProductName());
+		System.out.println(cus.getCustomerName());
 		init(cus,product);
 		 
 	}
@@ -95,6 +97,7 @@ private BrowseProductGui callingFrame;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 1000, 900, 700);
 		setMinimumSize(new Dimension(900,700));
+		setPreferredSize(new Dimension(900,700));
 		setTitle("Penpals Gift Shop");
 		
 			contentPane = new JPanel();
@@ -102,8 +105,8 @@ private BrowseProductGui callingFrame;
 			contentPane.setLayout(new BorderLayout(0, 0));
 		
 			//Image Label
-	        resizedIcon = createResizedIcon(product.getProductImageURL(), 700, 500); //uncomment it later
-//				resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
+	//        resizedIcon = createResizedIcon(product.getProductImageURL(), 700, 500); //uncomment it later
+			resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
 	        imageLabel = new JLabel(resizedIcon);
 	        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 	        imageLabel.setVerticalAlignment(JLabel.CENTER);
@@ -140,13 +143,13 @@ private BrowseProductGui callingFrame;
 		        //add Discount Percentage beside price (if any) 
 		//        if(has discount)
 		//        {
-				            double discount = 9.80; //delete it later, retrieve discount from database
-				            String discountString = String.valueOf(discount);
-				            discountString = " - " + discountString + "%";
-			            discountLabel = new JLabel(discountString);
-			            discountLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			            discountLabel.setVerticalAlignment(JLabel.CENTER);
-		            pricePanel.add(discountLabel);        	
+				  //          double discount = 9.80; //delete it later, retrieve discount from database
+				  //          String discountString = String.valueOf(discount);
+				  //          discountString = " - " + discountString + "%";
+			      //      discountLabel = new JLabel(discountString);
+			      //      discountLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			      //      discountLabel.setVerticalAlignment(JLabel.CENTER);
+		          //  pricePanel.add(discountLabel);        	
 		//        }
 		
 		        pricePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -308,7 +311,7 @@ private BrowseProductGui callingFrame;
 	        contentPane.add(centerContainer,BorderLayout.CENTER);
 	        
         getContentPane().add(scrollableBrowseArea, BorderLayout.CENTER);  
-        pack();
+        //pack();
         setVisible(true);
     }
 
