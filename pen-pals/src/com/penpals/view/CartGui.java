@@ -110,7 +110,11 @@ private JFrame callingFrame;
 	
 	public void init(Customer cus) {
 		//cartItems = loadCartItems();
-		cartItems = cus.getCustomerShoppingCart().getShoppingCartItems();
+		if (cus.getCustomerShoppingCart() != null){
+			cartItems = cus.getCustomerShoppingCart().getShoppingCartItems();
+		} else {
+			cartItems = new ArrayList<CartItem>();
+		}
 		setBounds(100, 100, 500, 300);
 		setTitle("Penpals Gift Shop");
 		setLayout(new BorderLayout());
@@ -340,7 +344,7 @@ private JFrame callingFrame;
 		frame.setVisible(true);
 	}
 	
-	public List<CartItem> loadCartItems()  //dummy data , call controller function later
+	/*public List<CartItem> loadCartItems()  //dummy data , call controller function later
 	{
 		ProductCategory category = new ProductCategory(1, "Sample Category");
 		
@@ -363,7 +367,7 @@ private JFrame callingFrame;
         return cartItems;
 		   
 		
-	}
+	}*/
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub

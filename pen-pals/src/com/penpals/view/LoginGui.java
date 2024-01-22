@@ -304,7 +304,7 @@ public class LoginGui extends JFrame implements MouseListener, ActionListener{
         cartItems.add(cartItem1);
         cartItems.add(cartItem2);
         cartItems.add(cartItem3);
-        ShoppingCart shoppingCart = new ShoppingCart(cartItems);
+        //ShoppingCart shoppingCart = new ShoppingCart(cartItems);
 
         // Create a sample order with the cart item
         List<Order> orders = new ArrayList<>();
@@ -341,7 +341,7 @@ public class LoginGui extends JFrame implements MouseListener, ActionListener{
                 "password123",
                 address,
                 1,
-                shoppingCart,
+                null,
                 orders,
                 coupons
         );

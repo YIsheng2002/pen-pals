@@ -8,8 +8,9 @@ public class Product {
     private int stockQuantity;
     private ProductCategory category;
     private String imageURL;
+    private boolean hasPromotion;
 
-    public Product(int id, String name, String description, double price, int stockQuantity, ProductCategory category, String imageURL) {
+    public Product(int id, String name, String description, double price, int stockQuantity, ProductCategory category, String imageURL, boolean hasPromotion) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -17,6 +18,7 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.category = category;
         this.imageURL = imageURL;
+        this.hasPromotion = hasPromotion;
     }
 
     public Product()
@@ -28,6 +30,7 @@ public class Product {
         this.stockQuantity = 0;
         this.category = new ProductCategory();
         this.imageURL = "";
+        this.hasPromotion = false;
     }
 
     public int getProductId() {
@@ -91,5 +94,14 @@ public class Product {
     public void setProductImageURL(String imageURL) 
     {
         this.imageURL = imageURL;
+    }
+
+    public boolean getProductHasPromotion() {
+        return hasPromotion;
+    }
+
+    public void setProductHasPromotion(boolean hasPromotion) 
+    {
+        this.hasPromotion = hasPromotion;
     }
 }

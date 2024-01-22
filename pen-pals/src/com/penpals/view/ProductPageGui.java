@@ -32,6 +32,9 @@ import javax.swing.border.EmptyBorder;
 import com.penpals.model.CartItem;
 import com.penpals.model.Customer;
 import com.penpals.model.Product;
+import com.penpals.model.Feedback;
+
+import com.penpals.controller.*;
 
 public class ProductPageGui extends JFrame implements MouseListener, ActionListener{
 
@@ -51,6 +54,8 @@ public class ProductPageGui extends JFrame implements MouseListener, ActionListe
 				private JLabel descriptionLabel;
 				private JLabel productDescriptionLabel;
 				private JLabel stockLabel;
+
+			private JPanel ratingHistogramPanel;
 				
 			private JLabel feedbackString;
 			private JPanel feedbackPanel;
@@ -86,8 +91,6 @@ private BrowseProductGui callingFrame;
 		this.cus = cus;
 		this.product = product;
 		this.callingFrame = callingFrame;
-		System.out.println(product.getProductName());
-		System.out.println(cus.getCustomerName());
 		init(cus,product);
 		 
 	}
@@ -95,7 +98,7 @@ private BrowseProductGui callingFrame;
 	private void init(Customer cus,Product product) 
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 1000, 900, 700);
+		//setBounds(200, 1000, 900, 700);
 		setMinimumSize(new Dimension(900,700));
 		setPreferredSize(new Dimension(900,700));
 		setTitle("Penpals Gift Shop");
@@ -105,8 +108,8 @@ private BrowseProductGui callingFrame;
 			contentPane.setLayout(new BorderLayout(0, 0));
 		
 			//Image Label
-	//        resizedIcon = createResizedIcon(product.getProductImageURL(), 700, 500); //uncomment it later
-			resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
+	        resizedIcon = createResizedIcon(product.getProductImageURL(), 700, 500); //uncomment it later
+			//resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
 	        imageLabel = new JLabel(resizedIcon);
 	        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 	        imageLabel.setVerticalAlignment(JLabel.CENTER);
@@ -141,16 +144,16 @@ private BrowseProductGui callingFrame;
 	
 	        
 		        //add Discount Percentage beside price (if any) 
-		//        if(has discount)
-		//        {
-				  //          double discount = 9.80; //delete it later, retrieve discount from database
-				  //          String discountString = String.valueOf(discount);
-				  //          discountString = " - " + discountString + "%";
-			      //      discountLabel = new JLabel(discountString);
-			      //      discountLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-			      //      discountLabel.setVerticalAlignment(JLabel.CENTER);
-		          //  pricePanel.add(discountLabel);        	
-		//        }
+		        if(product.getProductHasPromotion())
+		        {
+				            double discount = new ProductController().getProductPromotionPercentage(product.getProductId());//delete it later, retrieve discount from database
+				            String discountString = String.valueOf(discount);
+				            discountString = " - " + discountString + "%";
+			            discountLabel = new JLabel(discountString);
+			            discountLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+			            discountLabel.setVerticalAlignment(JLabel.CENTER);
+		            pricePanel.add(discountLabel);        	
+		        }
 		
 		        pricePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		        
@@ -196,6 +199,9 @@ private BrowseProductGui callingFrame;
 
 	        //to separate the comments with upper elements
 	        JPanel emptySpace = new JPanel();
+
+			int[] ratingCount = new ProductController().getRatingCountList(product.getProductId());
+			ratingHistogramPanel = new RatingGraphGui(ratingCount).getChartPanel();
 	        
 	        //add comment string to indicate ratings and reviews section
 	        feedbackString = new JLabel("Comments :");
@@ -205,38 +211,34 @@ private BrowseProductGui callingFrame;
         
         centerContainer.add(centerPanel);
         centerContainer.add(emptySpace);
+		centerContainer.add(ratingHistogramPanel);
+		centerContainer.add(emptySpace);
         centerContainer.add(feedbackString);
         
         
 
 	        //display feedback
 	       //retrieve feedback data form database
-	        //dummy feedback data
-	        ArrayList<String> feedbacks = new ArrayList<>();
-	        feedbacks.add("Good");
-	        feedbacks.add("Nice");
-	        feedbacks.add("Bad");
-	        feedbacks.add("Excellent");
-	        feedbacks.add("Rubbish");
+	        List<Feedback> feedbacks = new FeedbackController().getAllFeedback(product.getProductId());
 	        
 	        // For Each Loop for iterating ArrayList
-	        for (String feedback : feedbacks)
+	        for (Feedback feedback : feedbacks)
 	        {
 	        	feedbackPanel = new JPanel(new GridLayout(0,1,0,0));
 	        	
-		        	feedbackLabel = new JLabel(feedback);
+		        	feedbackLabel = new JLabel(feedback.getFeedbackReview());
 		        	feedbackLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 19));
 		        	
 		        	ratingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING,0,0));
 		        	
 		            //int ratings = feedback.getRatings(); //uncomment it later
-			            int ratings = 3; //delete it later
+			            int ratings = feedback.getFeedbackRating(); //delete it later
 			            ratingsLabel = new JLabel("Ratings: ");
 			            ratingsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 17 ));
 		            ratingPanel.add(ratingsLabel);
 		            
 		            //display star based on ratings 
-		            for(int i = 1 ; i <= 5 ; i++)
+		            for(int i = 1 ; i <= ratings ; i++)
 		            {
 			            	starLabel = new JLabel();
 			            		starIcon = createResizedIcon("/resources/uiSymbol/ratingStar.png",18,12);
