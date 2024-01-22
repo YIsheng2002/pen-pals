@@ -82,10 +82,10 @@ private BrowseProductGui callingFrame;
 	 * Create the frame.
 	 */
 	
-	public ProductPageGui(Customer cus, Product product) { //BrowseProductGui callingFrame
+	public ProductPageGui(BrowseProductGui callingFrame, Customer cus, Product product) { 
 		this.cus = cus;
 		this.product = product;
-		//this.callingFrame = callingFrame;
+		this.callingFrame = callingFrame;
 		System.out.println(product.getProductName());
 		System.out.println(cus.getCustomerName());
 		init(cus,product);

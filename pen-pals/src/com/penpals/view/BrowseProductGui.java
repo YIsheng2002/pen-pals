@@ -261,7 +261,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
      	    @Override
      	    public void mouseClicked(MouseEvent e) {
      	    	dispose();
-     	        ProductPageGui frame = new ProductPageGui(cus,product);//BrowseProductGui.this
+     	        ProductPageGui frame = new ProductPageGui(BrowseProductGui.this ,cus,product);//
      	        frame.setVisible(true);
      	    }
 
