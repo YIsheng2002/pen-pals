@@ -194,7 +194,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
+		if(e.getSource()==voucherButton || e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
@@ -203,7 +203,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
+		if(e.getSource()==voucherButton ||e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getDefaultCursor());
 		}
@@ -216,6 +216,12 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 		{
 			dispose();
 			OrderHistoryGui frame = new OrderHistoryGui(cus);
+			frame.setVisible(true);
+		}
+		else if(e.getSource()==voucherButton)
+		{
+			dispose();
+			CouponGui frame = new CouponGui(cus,this);
 			frame.setVisible(true);
 		}
 		else if(e.getSource()==cartButton)

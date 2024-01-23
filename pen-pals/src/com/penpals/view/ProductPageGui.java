@@ -99,6 +99,7 @@ private BrowseProductGui callingFrame;
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//setBounds(200, 1000, 900, 700);
+		//setBounds(200, 1000, 900, 700);
 		setMinimumSize(new Dimension(900,700));
 		setPreferredSize(new Dimension(900,700));
 		setTitle("Penpals Gift Shop");

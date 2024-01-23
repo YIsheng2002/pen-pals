@@ -20,8 +20,7 @@ public class RatingGraphGui extends JPanel {
   private static final long serialVersionUID = 1L;
   private ChartPanel panel;  
   
-  public RatingGraphGui(int[] ratingCount) {   
-  
+  public RatingGraphGui(double[] ratingCount) {   
     // Create Dataset  
     CategoryDataset dataset = createDataset(ratingCount);  
       
@@ -53,10 +52,10 @@ public class RatingGraphGui extends JPanel {
     panel=new ChartPanel(chart);  
   }  
   
-  private CategoryDataset createDataset(int[] ratingCount) {  
+  private CategoryDataset createDataset(double[] ratingCount) {  
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();  
   
-    int maxCount = 0;
+    double maxCount = 0;
     for(int i = 0; i < ratingCount.length; i++)
     {
         if(ratingCount[i] > maxCount)
