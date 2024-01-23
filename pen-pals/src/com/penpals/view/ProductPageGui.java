@@ -51,6 +51,8 @@ public class ProductPageGui extends JFrame implements MouseListener, ActionListe
 				private JLabel descriptionLabel;
 				private JLabel productDescriptionLabel;
 				private JLabel stockLabel;
+
+			private RatingGraphGui ratingGraphGui;
 				
 			private JLabel feedbackString;
 			private JPanel feedbackPanel;
@@ -93,7 +95,7 @@ private BrowseProductGui callingFrame;
 	private void init(Customer cus,Product product) 
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 1000, 900, 700);
+		//setBounds(200, 1000, 900, 700);
 		setMinimumSize(new Dimension(900,700));
 		setTitle("Penpals Gift Shop");
 		
@@ -193,6 +195,10 @@ private BrowseProductGui callingFrame;
 
 	        //to separate the comments with upper elements
 	        JPanel emptySpace = new JPanel();
+
+			double ratingCount[] = {0,0,10,56,78,134};
+			ratingGraphGui = new RatingGraphGui(ratingCount);
+			ratingGraphGui.setVisible(true);
 	        
 	        //add comment string to indicate ratings and reviews section
 	        feedbackString = new JLabel("Comments :");
@@ -202,6 +208,8 @@ private BrowseProductGui callingFrame;
         
         centerContainer.add(centerPanel);
         centerContainer.add(emptySpace);
+		centerContainer.add(ratingGraphGui.getChartPanel());
+		centerContainer.add(emptySpace);
         centerContainer.add(feedbackString);
         
         

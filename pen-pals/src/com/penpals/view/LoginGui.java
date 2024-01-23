@@ -328,7 +328,7 @@ public class LoginGui extends JFrame implements MouseListener, ActionListener{
         orders.add(order3);
         orders.add(order4);
         // Create a sample coupon
-        Coupon coupon = new Coupon(1, 10.0, "Discount on Electronics", "ELECTRO10", "2024-12-31");
+        Coupon coupon = new Coupon(1, 10.0, "Discount on Electronics", "ELECTRO10", "2024-12-31", 1);
 
         // Create a sample customer with the address, shopping cart, order, and coupon
         List<Coupon> coupons = new ArrayList<>();
