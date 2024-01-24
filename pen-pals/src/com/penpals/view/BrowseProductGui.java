@@ -293,7 +293,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 				String priceString = String.valueOf(price);
 				String discountPriceString = String.valueOf(discountPrice);
 			
-				productPriceLabel.setText("<html><strike>" + priceString + "</strike> <b style = \"color:red;\"> " + discountPriceString + "</b></html>");
+				productPriceLabel.setText("<html><strike> RM " + priceString + "</strike> <br><b style = \"color:red;\"> NOW ONLY RM " + discountPriceString + " <></b></html>");
 			productPriceLabel.setHorizontalAlignment(JLabel.CENTER);
 			} else {
 		           // Create a JLabel for the price

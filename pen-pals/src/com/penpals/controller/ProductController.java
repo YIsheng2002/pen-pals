@@ -438,9 +438,9 @@ public class ProductController extends Controller{
     }
 
     // get rating count list
-    public int[] getRatingCountList(int productId)
+    public double[] getRatingCountList(int productId)
     {
-        int[] ratingCount = {0,0,0,0,0,0};
+        double[] ratingCount = {0,0,0,0,0,0};
         try
         {
             String sql = "SELECT rating, COUNT(rating) AS rating_count FROM feedback WHERE product_id_fk = ? GROUP BY rating";
@@ -449,12 +449,33 @@ public class ProductController extends Controller{
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
-                ratingCount[rs.getInt("rating")] = rs.getInt("rating_count");
+                ratingCount[rs.getInt("rating")] = Double.valueOf(rs.getInt("rating_count"));
             }
         } catch (SQLException err)
         {
             System.out.println(err.getMessage());
         }
         return ratingCount;
+    }
+
+    //get stock quantity
+    public int getProductStockQuantity(int productId)
+    {
+        int stockQuantity = 0;
+        try
+        {
+            String sql = "SELECT stock FROM product WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                stockQuantity = rs.getInt("stock");
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return stockQuantity;
     }
 }

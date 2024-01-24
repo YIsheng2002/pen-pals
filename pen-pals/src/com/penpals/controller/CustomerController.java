@@ -46,5 +46,45 @@ public class CustomerController extends Controller{
 
         return customer;
     }
+
+    public void updateCustomerDetail(Customer customer)
+    {
+        try
+        {
+            String sql = "UPDATE customer SET name = ?, email = ?, telNumber = ?, username = ?, password = ? WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customer.getCustomerName());
+            ps.setString(2, customer.getCustomerEmail());
+            ps.setString(3, customer.getCustomerTelNumber());
+            ps.setString(4, customer.getCustomerUsername());
+            ps.setString(5, customer.getCustomerPassword());
+            ps.setInt(6, customer.getCustomerId());
+            ps.executeUpdate();
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+    }
      
+    public void addCustomer(Customer customer)
+    {
+        try
+        {
+            String sql = "INSERT INTO customer (name, email, telNumber, username, password) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, customer.getCustomerName());
+            ps.setString(2, customer.getCustomerEmail());
+            ps.setString(3, customer.getCustomerTelNumber());
+            ps.setString(4, customer.getCustomerUsername());
+            ps.setString(5, customer.getCustomerPassword());
+            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery("SELECT LAST_INSERT_ID();");
+            if(rs.next()){
+                new AddressController().insertAddressDetail(customer.getCustomerAddress(), rs.getInt(1));
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+    }
 }

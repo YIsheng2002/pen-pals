@@ -29,7 +29,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.penpals.db.MyDatabase;
+import com.penpals.controller.CustomerController;
+import com.penpals.model.Address;
+import com.penpals.model.Customer;
 
 public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 
@@ -75,7 +77,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 	
 	private Dimension frameSize;
 	
-
+	private CustomerController customerController = new CustomerController();
 
 	/**
 	 * Create the frame.
@@ -388,38 +390,24 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 		
 		else
 		{
+			Customer customer = new Customer();
+			customer.setCustomerUsername(usernameField.getText());
+			customer.setCustomerPassword(passwordField.getText());
+			customer.setCustomerName(nameField.getText());
+			customer.setCustomerEmail(emailField.getText());
+			customer.setCustomerTelNumber(telNumberField.getText());
+			Address address = new Address();
+			address.setNumber(Integer.parseInt(addressNumberField.getText()));
+			address.setRoad(addressRoadField.getText());
+			address.setPostcode(Integer.parseInt(addressPostcodeField.getText()));
+			address.setState(addressStateField.getText());
+			customer.setCustomerAddress(address);
+			customerController.addCustomer(customer);
+
 			southPanel.setVisible(false);;
 			panel.add(successRegisterPanel,BorderLayout.PAGE_END);
 			successRegisterPanel.setVisible(true);
 		
-			/*
-			 * try { String username = usernameField.getText(); String password =
-			 * passwordField.getText();
-			 * 
-			 * 
-			 * //controller function: Check whether username is already exist
-			 * 
-			 * Connection con = MyDatabase.doConnection(); Statement stm =
-			 * con.createStatement(); String checkSQL =
-			 * "SELECT * FROM account WHERE username = '" + username + "' AND '" + password
-			 * + "'"; ResultSet rs = stm.executeQuery(checkSQL); if(rs.next()) {
-			 * JOptionPane.showMessageDialog(null,
-			 * "The username is alreay exist.","Error",JOptionPane.WARNING_MESSAGE);
-			 * usernameField.setText(""); usernameField.setText(""); } else { String sql =
-			 * "INSERT INTO account (username, password) VALUES (" + username + "," +
-			 * password + ")"; stm.executeUpdate(sql);
-			 * JOptionPane.showMessageDialog(null,"Registration successful!");
-			 * 
-			 * dispose(); Login frame = new Login(); frame.setVisible(true); } con.close();
-			 * 
-			 * }catch(SQLException err){
-			 * JOptionPane.showMessageDialog(null,err.getMessage());
-			 * 
-			 * } catch (ClassNotFoundException e1) { // TODO Auto-generated catch block
-			 * JOptionPane.showMessageDialog(null,e1.getMessage()); }
-			 */
-		
-		// Add data to db + error handling
 		}
 	}
 	

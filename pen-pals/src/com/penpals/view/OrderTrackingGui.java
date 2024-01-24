@@ -38,9 +38,11 @@ import com.penpals.model.Order;
 import com.penpals.model.Product;
 import com.penpals.model.ProductCategory;
 
+import com.penpals.controller.OrderController;
+
+import java.util.Arrays;
 
 import java.text.SimpleDateFormat;  
-import java.util.Date;  
 
 public class OrderTrackingGui extends JFrame implements MouseListener, ActionListener {
 
@@ -97,7 +99,7 @@ public class OrderTrackingGui extends JFrame implements MouseListener, ActionLis
 
 private Customer cus;
 private Order order;
-
+private OrderController orderController = new OrderController();
 
 
 	/**
@@ -113,7 +115,7 @@ private Order order;
 
 	private void init(Order order) 
 	{
-		
+		order.setOrderCartItems(orderController.getAllItembyOrderId(order.getOrderId()));
 		//frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -163,10 +165,10 @@ private Order order;
 					
 						addressLabel = new JLabel();
 						
-							int number = order.getOrderCustomer().getCustomerAddress().getNumber();
-							int postcode = order.getOrderCustomer().getCustomerAddress().getPostcode();
-							String state = order.getOrderCustomer().getCustomerAddress().getState();
-							String road = order.getOrderCustomer().getCustomerAddress().getRoad();
+							int number = cus.getCustomerAddress().getNumber();
+							int postcode = cus.getCustomerAddress().getPostcode();
+							String state = cus.getCustomerAddress().getState();
+							String road = cus.getCustomerAddress().getRoad();
 							String address = String.valueOf(number) + ", " + road + ", " + String.valueOf(postcode)+ ", "+ state;
 							address = "Address : " + address;
 				
@@ -220,7 +222,7 @@ private Order order;
 						dateLabel.setVerticalAlignment(JLabel.TOP);
 						
 					    //Order date JLabel
-					     Date date = order.getOrderDate();
+					     String date = order.getOrderDate();
 					     String orderDate = date.toString();
 					     orderDateLabel = new JLabel();
 					     orderDateLabel.setVerticalAlignment(JLabel.TOP);
@@ -396,12 +398,17 @@ private Order order;
 			{
 				JOptionPane.showMessageDialog(null,"The order is completed.");
 				//set status as completed
-				//order.setIsCompleted(true);
+				orderController.updateOrderIsCompleted(order.getOrderId());
+				order.setIsCompleted(true);
 				
 				dispose();
 				//open a new frame with completed order
-				//OrderTracking frame = new OrderTracking(order); //uncomment it 
+				//OrderTrackingGui frame = new OrderTrackingGui(cus ,order);
 				//PLEASE CHECK to confirm the complete order button disappear when order is completed
+				for (CartItem cartItem : order.getOrderCartItems()) {
+					System.out.println(cartItem.getCartItemProduct().getProductName());
+					System.out.println(cartItem.getCartItemQuantity());
+				}
 				RatingsAndFeedbackGui frame = new RatingsAndFeedbackGui(cus,order); //delete it later
 				frame.setVisible(true);
 			}

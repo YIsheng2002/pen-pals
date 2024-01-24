@@ -34,6 +34,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.penpals.controller.CouponController;
+
 import com.penpals.model.Coupon;
 import com.penpals.model.Customer;
 import com.penpals.model.Order;
@@ -71,10 +73,11 @@ public class CouponGui extends JFrame implements  MouseListener, ActionListener{
 			private JPanel qtyPanel;
 			
 				private JLabel qtyLabel;
+	
+	private CouponController couponController = new CouponController();
+	private List<Coupon> couponList = new ArrayList<Coupon>();
+
 				
-//				private JLabel priceLabel;
-			
-	//south 
 			
 	private Customer cus;
 private JFrame callingFrame;
@@ -85,19 +88,12 @@ private JFrame callingFrame;
 		this.cus = cus;
 		this.callingFrame = callingFrame;
 		init(cus);
-		
 	}
 	
 	public void init(Customer cus) {
-		Coupon coupon1 = new Coupon(1, 10, "10% off", "10OFF", "2021-12-31", 100);
-		Coupon coupon2 = new Coupon(2, 20, "20% off", "20OFF", "2021-12-31", 200);
-		Coupon coupon3 = new Coupon(3, 30, "30% off", "30OFF", "2021-12-31", 300);
-		Coupon [] couponList = {coupon1, coupon2, coupon3};
-		List<Coupon> coupons = Arrays.asList(couponList);
+		couponList = couponController.getAllCouponsbyCustomerId(cus.getCustomerId());
+		cus.setCustomerCoupons(couponList);
 
-		System.out.println("CouponGui: init: coupons: " + coupons);
-		//cartItems = loadCartItems();
-		//cartItems = cus.getCustomerShoppingCart().getShoppingCartItems();
 		setBounds(100, 100, 500, 300);
 		setTitle("Penpals Gift Shop - Coupon");
 		setLayout(new BorderLayout());
@@ -120,18 +116,8 @@ private JFrame callingFrame;
 					couponsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 				northCenterPanel.add(couponsLabel);
 				
-				
-				/**northRightPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-					manageButton = new JButton("Manage Cart");
-					manageButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-					manageButton.addActionListener(this);
-					manageButton.addMouseListener(this);
-				northRightPanel.add(manageButton);**/
-			
-				
 			northPanel.add(northLeftPanel,BorderLayout.LINE_START);
 			northPanel.add(northCenterPanel,BorderLayout.CENTER);
-			//northPanel.add(northRightPanel,BorderLayout.LINE_END);
 		add(northPanel,BorderLayout.PAGE_START);
 		
 		
@@ -139,7 +125,7 @@ private JFrame callingFrame;
 			couponsPanel = new JPanel(new GridLayout(0,1,0,0));
 			
 		 
-			for(Coupon coupon : coupons) 
+			for(Coupon coupon : couponList) 
 			{
 				couponPanel = createCouponPanel(coupon);
 				couponsPanel.add(couponPanel);
@@ -169,7 +155,6 @@ private JFrame callingFrame;
 				 + coupon.getCouponMinSpent()+ 
 				 "<br> Expiration Date : "
 				 + coupon.getCouponExpirationDate() + "</html>");
-//		        nameLabel.setText("Product");
 		        minSpentLabel.setVerticalAlignment(JLabel.CENTER);
 		        
 		    couponDetailPanel.add(minSpentLabel,BorderLayout.CENTER);
@@ -178,7 +163,7 @@ private JFrame callingFrame;
 		    
 			//east
 			
-				int qty = 2;
+				int qty = coupon.getCouponQuantity();
 				qtyLabel = new JLabel(String.valueOf(qty));
 				qtyLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 				qtyLabel.setHorizontalAlignment(JLabel.CENTER);

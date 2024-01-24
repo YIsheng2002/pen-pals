@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import com.penpals.model.CartItem;
+import com.penpals.model.ShoppingCart;
 import com.penpals.model.Customer;
 import com.penpals.model.Product;
 import com.penpals.model.Feedback;
@@ -82,6 +83,7 @@ public class ProductPageGui extends JFrame implements MouseListener, ActionListe
 private Customer cus;
 private Product product;
 private BrowseProductGui callingFrame;
+private ShoppingCart cart;
 
 	/**
 	 * Create the frame.
@@ -201,7 +203,7 @@ private BrowseProductGui callingFrame;
 	        //to separate the comments with upper elements
 	        JPanel emptySpace = new JPanel();
 
-			int[] ratingCount = new ProductController().getRatingCountList(product.getProductId());
+			double[] ratingCount = new ProductController().getRatingCountList(product.getProductId());
 			ratingHistogramPanel = new RatingGraphGui(ratingCount).getChartPanel();
 	        
 	        //add comment string to indicate ratings and reviews section
@@ -334,8 +336,9 @@ private BrowseProductGui callingFrame;
 		// TODO Auto-generated method stub
 		if(e.getSource()==addToCartButton)
 		{
+			cart = new ShoppingCartController().getShoppingCartDetailbyCustomerId(cus.getCustomerId());
 			//add to cart (controller function)
-			
+			new ShoppingCartController().addItemToCart(cart.getShoppingCartId(), product.getProductId());
 			JOptionPane.showMessageDialog(null, "Product is added to cart successfully.","Add To Cart", JOptionPane.INFORMATION_MESSAGE);
 			
 		}
