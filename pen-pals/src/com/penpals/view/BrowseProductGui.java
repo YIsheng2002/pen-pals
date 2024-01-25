@@ -1,44 +1,24 @@
 package com.penpals.view;
 import com.penpals.model.Customer;
 import com.penpals.model.Product;
-import com.penpals.model.ProductCategory;
-import com.penpals.db.MyDatabase;
-
 import com.penpals.controller.ProductController;
-
-
-import java.awt.EventQueue;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale.Category;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.io.File;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
-
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +27,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
 
 public class BrowseProductGui extends JFrame implements MouseListener, ActionListener, KeyListener{
 
@@ -55,30 +36,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 	private List<Product> products= productController.getAllProduct();
 	
     private FilterProductPanel filterPanel;
-	
-	private JLayeredPane layeredPane;
-	
 
-		
-			private JPanel categoryPanel;
-				private JLabel categoryLabel;
-				private JPanel categoryBtnPanel;
-//					private JButton categoryButton;
-				
-			private JPanel priceRangePanel;
-			
-				//north 
-				private JLabel priceRangeLabel;
-				//center (flowlayout)
-				private JPanel minMaxPanel;
-					private JTextField minPriceField;
-					private JLabel toSymbolLabel;
-					private JTextField maxPriceField;
-					
-			private JPanel ratingsPanel;
-				private JLabel ratingsLabel;
-				private JTextField ratingsField;
-	
 	private JPanel contentPane;
 	
 		//north panel
@@ -262,7 +220,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
      	    @Override
      	    public void mouseClicked(MouseEvent e) {
      	    	dispose();
-     	        ProductPageGui frame = new ProductPageGui(BrowseProductGui.this ,cus,product);//
+     	        ProductPageGui frame = new ProductPageGui(BrowseProductGui.this ,cus,product);
      	        frame.setVisible(true);
      	    }
 
@@ -284,14 +242,16 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 	           	});
   			
 				JLabel productPriceLabel = new JLabel();
+				DecimalFormat df = new DecimalFormat("#.00");		       
+			
 			if (product.getProductHasPromotion()) {
 				// Create a JLabel for the price
 				double price = product.getProductPrice();
 				double discountPercentage = productController.getProductPromotionPercentage(product.getProductId());
 				double discountPrice = price * (100 - discountPercentage) / 100;
 				// Convert double to String
-				String priceString = String.valueOf(price);
-				String discountPriceString = String.valueOf(discountPrice);
+				 String priceString = df.format(price);
+				String discountPriceString = df.format(discountPrice);
 			
 				productPriceLabel.setText("<html><strike> RM " + priceString + "</strike> <br><b style = \"color:red;\"> NOW ONLY RM " + discountPriceString + " <></b></html>");
 			productPriceLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -299,8 +259,8 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 		           // Create a JLabel for the price
 		           double price = product.getProductPrice();
 		           // Convert double to String
-		           String priceString = String.valueOf(price);
-					productPriceLabel.setText(priceString);
+		           String priceString = df.format(price);
+					productPriceLabel.setText("RM " + priceString);
 	           productPriceLabel.setHorizontalAlignment(JLabel.CENTER);
 			}
 			   
@@ -310,7 +270,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
         productPanelItem.add(productImageLabel, BorderLayout.NORTH);
         productPanelItem.add(productNameLabel, BorderLayout.CENTER);
         productPanelItem.add(productPriceLabel, BorderLayout.SOUTH);
-		
+     
 
        return productPanelItem;
 	}

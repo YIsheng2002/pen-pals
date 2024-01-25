@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -14,11 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -30,19 +25,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
-
-import com.penpals.model.Address;
 import com.penpals.model.CartItem;
 import com.penpals.model.Customer;
 import com.penpals.model.Order;
-import com.penpals.model.Product;
-import com.penpals.model.ProductCategory;
-
-import com.penpals.controller.OrderController;
-
-import java.util.Arrays;
-
-import java.text.SimpleDateFormat;  
+import com.penpals.controller.OrderController;  
 
 public class OrderTrackingGui extends JFrame implements MouseListener, ActionListener {
 

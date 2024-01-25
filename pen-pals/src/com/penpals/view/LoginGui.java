@@ -6,39 +6,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 import com.penpals.controller.CustomerController;
-import com.penpals.db.*;
-import com.penpals.model.Address;
-import com.penpals.model.CartItem;
-import com.penpals.model.Coupon;
 import com.penpals.model.Customer;
-import com.penpals.model.Order;
-import com.penpals.model.Product;
-import com.penpals.model.ProductCategory;
-import com.penpals.model.ShoppingCart;
-
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Color;
 
 
 public class LoginGui extends JFrame implements MouseListener, ActionListener{
