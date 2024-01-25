@@ -1,5 +1,7 @@
 package com.penpals.view;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,12 +30,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 
 import com.penpals.controller.CustomerController;
 import com.penpals.model.Address;
 import com.penpals.model.Customer;
 
-public class RegisterGui extends JFrame implements ActionListener,MouseListener{
+public class RegisterGui extends JFrame implements ActionListener,MouseListener, DocumentListener{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -47,6 +52,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 		private JPanel textPanel;
 			private JLabel usernameLabel;
 			private JLabel passwordLabel;
+			private JLabel emptySpaceLabel;
 			private JLabel retypePasswordLabel;
 			private JLabel nameLabel;
 			private JLabel telNumberLabel;
@@ -54,7 +60,8 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 			private JLabel addressLabel;
 		private JPanel fieldPanel;
 			private JTextField usernameField;
-			private JPasswordField passwordField;
+			final private JPasswordField passwordField = new JPasswordField();
+			private JLabel passwordErrorLabel;
 			private JPasswordField retypePasswordField;
 			private JTextField nameField;
 			private JTextField telNumberField;
@@ -143,6 +150,10 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 					passwordLabel.setText("Password");
 					passwordLabel.setPreferredSize(new Dimension(200,30));
 					passwordLabel.setHorizontalAlignment(4);
+
+					emptySpaceLabel = new JLabel();
+					emptySpaceLabel.setPreferredSize(new Dimension(200,50));
+					emptySpaceLabel.setHorizontalAlignment(4);
 					
 					retypePasswordLabel = new JLabel();
 					retypePasswordLabel.setText("Retype Password");
@@ -172,6 +183,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 				
 				textPanel.add(usernameLabel);
 				textPanel.add(passwordLabel);
+				textPanel.add(emptySpaceLabel);
 				textPanel.add(retypePasswordLabel);
 				textPanel.add(nameLabel);
 				textPanel.add(telNumberLabel);
@@ -190,8 +202,14 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 					usernameField = new JTextField();
 					usernameField.setPreferredSize(new Dimension(450,30));
 					
-					passwordField = new JPasswordField();
 					passwordField.setPreferredSize(new Dimension(450,30));
+					passwordField.addMouseListener(this);
+					Document doc = passwordField.getDocument();
+					doc.addDocumentListener(this);
+
+					passwordErrorLabel = new JLabel();
+					passwordErrorLabel.setText("");
+					passwordErrorLabel.setPreferredSize(new Dimension(450,50));
 					
 					retypePasswordField = new JPasswordField();
 					retypePasswordField.setPreferredSize(new Dimension(450,30));
@@ -228,6 +246,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 			
 				fieldPanel.add(usernameField);
 				fieldPanel.add(passwordField);
+				fieldPanel.add(passwordErrorLabel);
 				fieldPanel.add(retypePasswordField);
 				fieldPanel.add(nameField);
 				fieldPanel.add(telNumberField);
@@ -308,8 +327,14 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 		}
 		else if(e.getSource()== addressStateField)
 		{
+			System.out.println("address state field clicked");
 			addressStateField.setText("");
 			addressStateField.setForeground(Color.BLACK);
+		}
+		else if (e.getSource()== passwordField)
+		{
+			System.out.println("password field clicked");
+			passwordErrorLabel.setText("<html><span style = \"color:red;\"> password must between 8-15 characters.<br><span style = \"color:red;\"> password must contain atleast one character. <br> <span style = \"color:red;\"> password must contain atleast one number. </html>");
 		}
 	}
 
@@ -365,6 +390,39 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 			frame.setVisible(true);
 		}
 	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getDocument() == passwordField.getDocument()){
+			String password = passwordField.getText();
+			String colorList[] = {"green", "green", "green"};
+			colorList = validatePasswordType(password, colorList);
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain atleast one character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+		}
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e){
+		// TODO Auto-generated method stub
+		if (e.getDocument() == passwordField.getDocument()){
+			String password = passwordField.getText();
+			String colorList[] = {"green", "green", "green"};
+			colorList = validatePasswordType(password, colorList);
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain atleast one character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+		}
+	}
+
+	@Override
+	public void removeUpdate(DocumentEvent e){
+		// TODO Auto-generated method stub
+		if (e.getDocument() == passwordField.getDocument()){
+			String password = passwordField.getText();
+			String colorList[] = {"green", "green", "green"};
+			colorList = validatePasswordType(password, colorList);
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain atleast one character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+		}
+	}
 	
 	public void register()
 	{
@@ -410,5 +468,25 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener{
 		
 		}
 	}
-	
+
+	public String[] validatePasswordType(String password, String[] colorList)
+	{
+		colorList[0] = "green";
+		colorList[1] = "green";
+		colorList[2] = "green";
+		if ( password.length() < 8 || password.length()>15) colorList[0] = "red";
+    	if ( !Pattern.compile(".*[0-9]+.*").matcher(password).matches()) colorList[2] = "red";
+		if ( !Pattern.compile(".*[a-zA-Z]+.*").matcher(password).matches()) colorList[1] = "red";
+    	return colorList;	
+	}
+
+	//password validation
+	public boolean validatePassword(String password)
+	{
+		String password_pattern = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$).{8,15}$";
+		Pattern pattern = Pattern.compile(password_pattern);
+
+		Matcher matcher = pattern.matcher(password);
+		return matcher.matches();	
+	}
 }
