@@ -33,7 +33,15 @@ import javax.swing.SwingUtilities;
 
 import java.awt.Font;
 
+import com.penpals.model.Coupon;
+
+import com.penpals.controller.CouponController;
+import com.penpals.controller.OrderController;
+import com.penpals.controller.PaymentController;
+
 public class CheckoutGui extends JFrame  implements MouseListener, ActionListener{
+
+	private CouponController couponController = new CouponController();
 
 	private static final long serialVersionUID = 1L;
 	private String paymentType = ""; 
@@ -127,11 +135,19 @@ public class CheckoutGui extends JFrame  implements MouseListener, ActionListene
 	private double grandTotal = 0;
 	private double discountRate = 0;
 	private  String priceString;
+	private Customer cus;
+	private OrderController orderController = new OrderController();
+	private List<CartItem> checkOutItems = new ArrayList<CartItem>();
+	private int couponQuantity;
+	private String couponCode;
 	/**
 	 * Create the frame.
 	 */
 	public CheckoutGui(Customer cus,List<CartItem> checkOutItems,JFrame callingFrame) {
 		this.callingFrame = callingFrame;
+		this.cus = cus;
+		this.checkOutItems = checkOutItems;
+		this.couponQuantity = 0;
 		init(cus,checkOutItems);
 	}
 	
@@ -422,12 +438,28 @@ public class CheckoutGui extends JFrame  implements MouseListener, ActionListene
 			else
 			{
 				//add to order list
+				int orderId = orderController.insertOrder((int)grandTotal, cus.getCustomerId());
+				System.out.println(orderId);
+				//add to payment
+				new PaymentController().insertPayment(orderId, paymentType, grandTotal);
+				//deduct coupon
+				if(couponQuantity>0)
+				{
+					couponController.deductCoupon(cus.getCustomerId(), couponCode, couponQuantity);
+				}
+
+				//add to order detail
+				for(CartItem item:checkOutItems)
+				{
+					orderController.insertOrderDetail(orderId, item.getCartItemProduct().getProductId(), item.getCartItemQuantity());
+				}
 				JOptionPane.showMessageDialog(null,"The order is placed successfully.");
 			}
 			
 		}
 	}
 
+	//select payment type
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	    if (e.getSource() == paymentSelectLabel) {
@@ -447,46 +479,44 @@ public class CheckoutGui extends JFrame  implements MouseListener, ActionListene
 	    
 	}
 
-
+	//select coupon
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		if(e.getSource()==couponSelectLabel)
 		{
-			String code = JOptionPane.showInputDialog("Enter coupon code");
+			couponCode = JOptionPane.showInputDialog("Enter coupon code");
 			//search whether the code valid
-			//bool valid = isCouponCodeValid(code);
-			//if valid
-			//Coupon coupon = getCouponFromDb(code);
-			//
+			couponQuantity = couponController.checkCouponCode(cus.getCustomerId(), couponCode, grandTotal);
+			if (couponQuantity > 0){
+					Coupon coupon = couponController.getCouponDetailbyCode(couponCode);
+					
+					discountRate = coupon.getDiscountPercentage()/100;
+					DecimalFormat df = new DecimalFormat("#.00");
+					couponSelectLabel.setText(couponCode);
+					grandTotal *= (1-discountRate);
+					
+					priceString = df.format(grandTotal);
+					total.setText("RM " + priceString);
+					
+					discountPanel = new JPanel(new BorderLayout());
+					discountPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+					
+					discountlLabel = new JLabel("Discount");
+					discountlLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+					discountlLabel.setForeground(new Color(137, 137, 137));
+					discountlLabel.setHorizontalAlignment(JLabel.LEADING);
+					discountPanel.add(discountlLabel,BorderLayout.LINE_START);
+					
+					priceString = df.format(grandTotal*discountRate);
+					discount = new JLabel("- RM "+ priceString);
+					discount.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+					discount.setForeground(new Color(183,80,39));
+					discount.setHorizontalAlignment(JLabel.TRAILING);
+					discountPanel.add(discount,BorderLayout.LINE_END);
+				detailsAndDiscountPanel.add(discountPanel,BorderLayout.PAGE_END);
+			}
 			
-			 discountRate = 0.15;
-			DecimalFormat df = new DecimalFormat("#.00");
-			couponSelectLabel.setText(code);
-			grandTotal *= (1-discountRate);
-		 	
-	        priceString = df.format(grandTotal);
-			total.setText("RM " + priceString);
-			
-			discountPanel = new JPanel(new BorderLayout());
-			discountPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-			
-				discountlLabel = new JLabel("Discount");
-				discountlLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-				discountlLabel.setForeground(new Color(137, 137, 137));
-				discountlLabel.setHorizontalAlignment(JLabel.LEADING);
-			discountPanel.add(discountlLabel,BorderLayout.LINE_START);
-			
-			priceString = df.format(grandTotal*discountRate);
-				discount = new JLabel("- RM "+ priceString);
-				discount.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
-				discount.setForeground(new Color(183,80,39));
-				discount.setHorizontalAlignment(JLabel.TRAILING);
-			discountPanel.add(discount,BorderLayout.LINE_END);
-		detailsAndDiscountPanel.add(discountPanel,BorderLayout.PAGE_END);
-			//else
-			//JOptionPane.showMessageDialog(null, "Invalid coupon code","Coupon",JOptionPane.INFORMATION_MESSAGE);
-
 		}
 		
 	}

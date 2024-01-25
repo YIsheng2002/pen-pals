@@ -36,6 +36,8 @@ import com.penpals.model.CartItem;
 import com.penpals.model.Customer;
 import com.penpals.model.Order;
 
+import com.penpals.controller.FeedbackController;
+
 
 public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, MouseListener{
 
@@ -67,6 +69,7 @@ public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, Mo
 		private  List<CartItem> cartItems;
 		private Order order;
 		private Customer cus;
+		private FeedbackController feedbackController = new FeedbackController();
 	//North label
 	private JLabel label;
 	
@@ -86,6 +89,9 @@ public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, Mo
 	//private void initializeComponents(Order orders)
 	private void init(Order order)
 	{
+		for (CartItem cartItem : order.getOrderCartItems()) {
+			System.out.println(cartItem.getCartItemProduct().getProductName());
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900,700);
 		setTitle("Penpals Gift Shop");
@@ -301,6 +307,18 @@ public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, Mo
 	                JOptionPane.showMessageDialog(null, "Please enter an integer (1-5) for ratings");
 	                return; // Exit the method if validation fails
 	            }
+	        }
+	    }
+		for (int i = 0; i < commentPanels.getComponentCount(); i++) {
+	        Component component = commentPanels.getComponent(i);
+	        if (component instanceof JPanel) {
+	            JPanel commentPanel = (JPanel) component;
+
+	            // Retrieve ratingTextField and feedbackTextField for each product
+	            JTextField ratingTextField = getRatingTextField(commentPanel);
+	            JTextField feedbackTextField = getFeedbackTextField(commentPanel);
+
+				feedbackController.addproductReview(cartItems.get(i).getCartItemProduct().getProductId(), cus.getCustomerId(),Integer.parseInt(ratingTextField.getText()),feedbackTextField.getText());
 	        }
 	    }
 

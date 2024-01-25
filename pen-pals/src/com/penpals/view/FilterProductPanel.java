@@ -343,6 +343,7 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 			frame.repaintProductPanel(frame.getProducts());
 		}  else {
 			System.out.println("Error");
+			System.out.println("More error");
 		}
 	}
 	

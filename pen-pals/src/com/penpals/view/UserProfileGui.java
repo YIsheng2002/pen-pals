@@ -35,6 +35,9 @@ import com.penpals.model.Product;
 import com.penpals.model.ProductCategory;
 import com.penpals.model.ShoppingCart;
 
+import com.penpals.controller.CustomerController;
+import com.penpals.controller.AddressController;
+
 import java.awt.Font;
 import java.awt.Color;
 
@@ -72,6 +75,8 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 			private ImageIcon backIcon;
 			
 	Customer cus;
+	CustomerController customerController = new CustomerController();
+	AddressController addressController = new AddressController();
 	/**
 	 * Create the frame.
 	 */
@@ -150,12 +155,17 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 				fieldLabelPanel = new JPanel();
 				fieldLabelPanel.setPreferredSize(new Dimension(5,300));
 				
-					usernameFieldLabel = new JLabel("old username");
+					usernameFieldLabel = new JLabel(cus.getCustomerUsername());
 					usernameFieldLabel.setForeground(new Color(96, 104, 97));
 					usernameFieldLabel.setPreferredSize(new Dimension(200,30));
 					usernameFieldLabel.addMouseListener(this);
 					
-					passwordFieldLabel = new JLabel("******");
+					String password = "";
+					String[] passwordArray = cus.getCustomerPassword().split("");
+					for (String s: passwordArray) {
+						password += "*";
+					}
+					passwordFieldLabel = new JLabel(password);
 					passwordFieldLabel.setForeground(new Color(96, 104, 97));
 					passwordFieldLabel.setPreferredSize(new Dimension(200,30));
 					passwordFieldLabel.addMouseListener(this);
@@ -261,7 +271,9 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 					JOptionPane.showMessageDialog(null, "Username should not exceed 50 characters.");
 				}
 				else
-				{
+				{	
+					cus.setCustomerUsername(username);
+					customerController.updateCustomerDetail(cus);
 					JOptionPane.showMessageDialog(null, "Username is updated successfully");
 					usernameFieldLabel.setText(username);
 				}
@@ -290,8 +302,9 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 					}
 					else
 					{
+						cus.setCustomerPassword(newPassword);
+						customerController.updateCustomerDetail(cus);
 						JOptionPane.showMessageDialog(null, "Password is updated successfully");
-					
 					}
 				}
 			}
@@ -311,6 +324,7 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 				}
 				else
 				{
+					cus.setCustomerName(name);
 					JOptionPane.showMessageDialog(null, "Name is updated successfully");
 					nameFieldLabel.setText(name);
 				}
@@ -330,6 +344,8 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 				}
 				else
 				{
+					cus.setCustomerTelNumber(telNo);
+					customerController.updateCustomerDetail(cus);
 					JOptionPane.showMessageDialog(null, "Telephone number is updated successfully");
 					telNumberFieldLabel.setText(telNo);
 				}
@@ -347,6 +363,8 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 				}
 				else
 				{
+					cus.setCustomerEmail(email);
+					customerController.updateCustomerDetail(cus);
 					JOptionPane.showMessageDialog(null, "Email is updated successfully");
 					emailFieldLabel.setText(email);
 				}
@@ -368,6 +386,8 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 					try
 					{
 						int addressNo = Integer.parseInt(addressNoString);
+						cus.getCustomerAddress().setNumber(addressNo);
+						addressController.updateAddressDetail(cus.getCustomerAddress(), cus.getCustomerId());
 						JOptionPane.showMessageDialog(null, "Address number is updated successfully");
 						addressNumberFieldLabel.setText(addressNoString);
 					}catch(NumberFormatException nfe)
@@ -391,6 +411,8 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 				}
 				else
 				{
+					cus.getCustomerAddress().setRoad(roadName);
+					addressController.updateAddressDetail(cus.getCustomerAddress(), cus.getCustomerId());
 					JOptionPane.showMessageDialog(null, "Road name is updated successfully");
 					addressRoadFieldLabel.setText(roadName);
 				}
@@ -412,6 +434,8 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 				{
 					try {
 						int postcode = Integer.parseInt(postcodeString);
+						cus.getCustomerAddress().setPostcode(postcode);
+						addressController.updateAddressDetail(cus.getCustomerAddress(), cus.getCustomerId());
 						JOptionPane.showMessageDialog(null, "Postcode is updated successfully");
 						addressPostcodeFieldLabel.setText(postcodeString);
 						
@@ -434,6 +458,8 @@ public class UserProfileGui extends JFrame implements ActionListener, MouseListe
 				}
 				else
 				{
+					cus.getCustomerAddress().setState(state);
+					addressController.updateAddressDetail(cus.getCustomerAddress(), cus.getCustomerId());
 					JOptionPane.showMessageDialog(null, "State is updated successfully");
 					addressStateFieldLabel.setText(state);
 				}

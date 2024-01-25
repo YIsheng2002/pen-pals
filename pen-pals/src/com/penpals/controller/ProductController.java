@@ -67,6 +67,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("description"));
                 product.setProductImageURL(rs.getString("image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -86,10 +90,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -105,6 +109,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("description"));
                 product.setProductImageURL(rs.getString("image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -123,10 +131,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE pc.name = ? GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE pc.name = ? GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE pc.name = ? GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE pc.name = ? GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, categoryName);
@@ -142,6 +150,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("p.description"));
                 product.setProductImageURL(rs.getString("p.image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("p.category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -160,10 +172,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE p.promotion_id_fk IS NOT NULL GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE p.promotion_id_fk IS NOT NULL GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE p.promotion_id_fk IS NOT NULL GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE p.promotion_id_fk IS NOT NULL GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, ratings);
@@ -178,6 +190,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("p.description"));
                 product.setProductImageURL(rs.getString("p.image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("p.category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -196,10 +212,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE p.promotion_id_fk IS NOT NULL AND pc.name = ? GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE p.promotion_id_fk IS NOT NULL AND pc.name = ? GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE p.promotion_id_fk IS NOT NULL AND pc.name = ? GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE p.promotion_id_fk IS NOT NULL AND pc.name = ? GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, categoryName);
@@ -215,6 +231,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("p.description"));
                 product.setProductImageURL(rs.getString("p.image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("p.category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -234,10 +254,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -255,6 +275,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("description"));
                 product.setProductImageURL(rs.getString("image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -273,10 +297,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, categoryName);
@@ -294,6 +318,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("p.description"));
                 product.setProductImageURL(rs.getString("p.image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("p.category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -312,10 +340,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.promotion_id_fk IS NOT NULL AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.promotion_id_fk IS NOT NULL AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.promotion_id_fk IS NOT NULL AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) WHERE (p.promotion_id_fk IS NOT NULL AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, minPrice);
@@ -332,6 +360,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("p.description"));
                 product.setProductImageURL(rs.getString("p.image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("p.category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -350,10 +382,10 @@ public class ProductController extends Controller{
             String sql;
             if (ratings != 0 ){
                 // SELECT WHEN RATING > 0
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (p.promotion_id_fk IS NOT NULL AND pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (p.promotion_id_fk IS NOT NULL AND pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING AVG(f.rating) >= ?;";
             } else {
                 // SELECT WHEN RATING = 0 (SELECT ALL NULL RATING ALSO)
-                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (p.promotion_id_fk IS NOT NULL AND pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
+                sql = "SELECT p.id, p.name, p.description, p.price, p.stock, p.image_url, p.category_id_fk, p.promotion_id_fk FROM product p LEFT JOIN feedback f ON (p.id = f.product_id_fk) JOIN product_category pc ON (p.category_id_fk = pc.id) WHERE (p.promotion_id_fk IS NOT NULL AND pc.name = ? AND p.price >= ? AND p.price <= ?) GROUP BY p.id HAVING (AVG(f.rating) >= ? OR AVG(f.rating) IS NULL);";
             }
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, categoryName);
@@ -371,6 +403,10 @@ public class ProductController extends Controller{
                 product.setProductDescription(rs.getString("p.description"));
                 product.setProductImageURL(rs.getString("p.image_url"));
                 product.setProductCategory(new ProductCategoryController().getProductCategoryDetailbyId(rs.getInt("p.category_id_fk")));
+                if (rs.getInt("promotion_id_fk") != 0 || rs.getInt("promotion_id_fk") > 0)
+                {
+                    product.setProductHasPromotion(true);
+                }
                 products.add(product);
             }
         } catch (SQLException err)
@@ -378,5 +414,68 @@ public class ProductController extends Controller{
             System.out.println(err.getMessage());
         }
         return products;
-    } 
+    }
+
+    // get product promotion percentage
+    public double getProductPromotionPercentage(int productId)
+    {
+        double promotionPercentage = 0;
+        try
+        {
+            String sql = "SELECT p.percentage FROM promotion p JOIN product pr ON (p.id = pr.promotion_id_fk) WHERE pr.id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                promotionPercentage = rs.getDouble("percentage");
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return promotionPercentage;
+    }
+
+    // get rating count list
+    public double[] getRatingCountList(int productId)
+    {
+        double[] ratingCount = {0,0,0,0,0,0};
+        try
+        {
+            String sql = "SELECT rating, COUNT(rating) AS rating_count FROM feedback WHERE product_id_fk = ? GROUP BY rating";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                ratingCount[rs.getInt("rating")] = Double.valueOf(rs.getInt("rating_count"));
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return ratingCount;
+    }
+
+    //get stock quantity
+    public int getProductStockQuantity(int productId)
+    {
+        int stockQuantity = 0;
+        try
+        {
+            String sql = "SELECT stock FROM product WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                stockQuantity = rs.getInt("stock");
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return stockQuantity;
+    }
 }

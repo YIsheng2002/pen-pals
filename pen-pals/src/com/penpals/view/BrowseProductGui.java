@@ -31,6 +31,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -120,7 +121,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		setLayout(new BorderLayout());
-		setBounds(200, 800, 900, 700);
+		//setBounds(200, 800, 900, 700);
 		//set frame min size
         setMinimumSize(new Dimension(900,700));
         setTitle("Penpal Gift Shop");
@@ -281,19 +282,35 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
      	        setCursor(Cursor.getDefaultCursor());
      	    }
 	           	});
-  
+  			
+				JLabel productPriceLabel = new JLabel();
+			if (product.getProductHasPromotion()) {
+				// Create a JLabel for the price
+				double price = product.getProductPrice();
+				double discountPercentage = productController.getProductPromotionPercentage(product.getProductId());
+				double discountPrice = price * (100 - discountPercentage) / 100;
+				// Convert double to String
+				String priceString = String.valueOf(price);
+				String discountPriceString = String.valueOf(discountPrice);
+			
+				productPriceLabel.setText("<html><strike> RM " + priceString + "</strike> <br><b style = \"color:red;\"> NOW ONLY RM " + discountPriceString + " <></b></html>");
+			productPriceLabel.setHorizontalAlignment(JLabel.CENTER);
+			} else {
 		           // Create a JLabel for the price
 		           double price = product.getProductPrice();
 		           // Convert double to String
 		           String priceString = String.valueOf(price);
-	           JLabel productPriceLabel = new JLabel(priceString);
+					productPriceLabel.setText(priceString);
 	           productPriceLabel.setHorizontalAlignment(JLabel.CENTER);
+			}
+			   
 
 
         // Add components to the productPanelItem
         productPanelItem.add(productImageLabel, BorderLayout.NORTH);
         productPanelItem.add(productNameLabel, BorderLayout.CENTER);
         productPanelItem.add(productPriceLabel, BorderLayout.SOUTH);
+		
 
        return productPanelItem;
 	}
@@ -352,36 +369,6 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 			setCursor(Cursor.getDefaultCursor());
 		}
 
-	}
-	
-	public List<Product> loadData2()
-	{
-		List<Product> products = new ArrayList<>();
-		
-		ProductCategory category = new ProductCategory(1, "Electronics");
-		// Create a sample product
-        Product product1 = new Product(1, "Product 31", "fretgergrdvf", 19.99, 10, category, "/resources/productImage/Key Chain.jpg");
-        Product product2 = new Product(2, "Product 32", "ewrvaeva", 29.99, 15, category, "/resources/productImage/Key Chain.jpg");
-        Product product3 = new Product(3, "Product 33", " werkjewiehwvrvwao arvaeowhravke knfjekrvahejvrvhkewhrjewkr jwerkwebn", 39.99, 20, category, "/resources/productImage/White Bear.jpg");
-
-        Product product4 = new Product(4, "Product 31", "Description 1", 19.99, 10, category, "/resources/productImage/Key Chain.jpg");
-        Product product5 = new Product(5, "Product 32", "Description 2", 29.99, 15, category, "/resources/productImage/White Bear.jpg");
-        Product product6 = new Product(6, "Product 33", "Description 3", 39.39, 20, category, "/resources/productImage/Key Chain.jpg");
-        Product product7 = new Product(7, "Product 31", "Description 1", 79.99, 10, category, "/resources/productImage/White Bear.jpg");
-        Product product8 = new Product(8, "Product 332", "Description 2", 212.99, 15, category, "/resources/productImage/White Bear.jpg");
-
-      
-        
-        products.add(product3);
-        products.add(product1);
-        products.add(product2);
-        products.add(product4);
-        products.add(product5);
-        products.add(product6);
-        products.add(product7);
-        products.add(product8);
-        
-        return products;
 	}
 	
 	public void repaintProductPanel(List<Product> products)

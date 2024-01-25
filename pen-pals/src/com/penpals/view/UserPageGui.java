@@ -108,7 +108,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 		        //username label
 		        usernameLabel = new JLabel();
 		        usernameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		        usernameLabel.setText("Username");
+		        usernameLabel.setText(cus.getCustomerName());
 		        usernameLabel.addMouseListener(this);
 	        userPanel.add(usernameLabel);
 	    
@@ -117,7 +117,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	        	//voucher Panel
 		        voucherPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		        	voucherIcon = createResizedIcon("/resources/uiSymbol/voucher.png", 50,50); 
-					 voucherButton = new JButton("Vouchers						",voucherIcon);
+					 voucherButton = new JButton("Coupons						",voucherIcon);
 					 voucherButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 					 voucherButton.setPreferredSize(new Dimension(450,100));
 					 voucherButton.addActionListener(this);
@@ -194,7 +194,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
+		if(e.getSource()==voucherButton || e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
@@ -203,7 +203,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
+		if(e.getSource()==voucherButton ||e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getDefaultCursor());
 		}
@@ -216,6 +216,12 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 		{
 			dispose();
 			OrderHistoryGui frame = new OrderHistoryGui(cus);
+			frame.setVisible(true);
+		}
+		else if(e.getSource()==voucherButton)
+		{
+			dispose();
+			CouponGui frame = new CouponGui(cus,this);
 			frame.setVisible(true);
 		}
 		else if(e.getSource()==cartButton)
