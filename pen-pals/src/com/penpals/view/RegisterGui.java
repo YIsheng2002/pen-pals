@@ -398,7 +398,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			String password = passwordField.getText();
 			String colorList[] = {"green", "green", "green"};
 			colorList = validatePasswordType(password, colorList);
-			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain atleast one character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase character and one lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
 		}
 	}
 
@@ -409,7 +409,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			String password = passwordField.getText();
 			String colorList[] = {"green", "green", "green"};
 			colorList = validatePasswordType(password, colorList);
-			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain atleast one character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase character and one lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
 		}
 	}
 
@@ -420,7 +420,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			String password = passwordField.getText();
 			String colorList[] = {"green", "green", "green"};
 			colorList = validatePasswordType(password, colorList);
-			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain atleast one character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase character and one lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
 		}
 	}
 	
@@ -437,8 +437,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			JOptionPane.showMessageDialog(null, "Username must at least 6 character!","Error",JOptionPane.WARNING_MESSAGE);
 			
 		}
-		else if(passwordField.getText().length() < 6)
-		{
+		else if(validatePassword(passwordField.getText()))		{
 			JOptionPane.showMessageDialog(null, "Password must at least 6 character!","Error",JOptionPane.WARNING_MESSAGE);
 		}
 		else if(!passwordField.getText().equals(retypePasswordField.getText()))
@@ -476,14 +475,14 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 		colorList[2] = "green";
 		if ( password.length() < 8 || password.length()>15) colorList[0] = "red";
     	if ( !Pattern.compile(".*[0-9]+.*").matcher(password).matches()) colorList[2] = "red";
-		if ( !Pattern.compile(".*[a-zA-Z]+.*").matcher(password).matches()) colorList[1] = "red";
+		if ( !Pattern.compile("^(?=[a-z])(?=[A-Z])+.*").matcher(password).matches()) colorList[1] = "red";
     	return colorList;	
 	}
 
 	//password validation
 	public boolean validatePassword(String password)
 	{
-		String password_pattern = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=\\S+$).{8,15}$";
+		String password_pattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,15}$";
 		Pattern pattern = Pattern.compile(password_pattern);
 
 		Matcher matcher = pattern.matcher(password);
