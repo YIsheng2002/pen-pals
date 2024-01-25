@@ -141,7 +141,7 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
    			
    					
    			southPanel = new JPanel(new BorderLayout());
-   				JPanel ratingPanel = new JPanel(new BorderLayout());
+   				ratingPanel = new JPanel(new BorderLayout());
    				
 	   				ratingsLabel = new JLabel("Ratings Above");
 	   				ratingsLabel.setBorder(new EmptyBorder(0, 5, 0, 5));

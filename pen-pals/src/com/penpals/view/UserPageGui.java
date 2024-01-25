@@ -9,28 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import com.penpals.model.Address;
-import com.penpals.model.CartItem;
-import com.penpals.model.Coupon;
 import com.penpals.model.Customer;
-import com.penpals.model.Order;
-import com.penpals.model.Product;
-import com.penpals.model.ProductCategory;
-import com.penpals.model.ShoppingCart;
-
 import java.awt.Font;
 
 public class UserPageGui extends JFrame implements ActionListener, MouseListener{

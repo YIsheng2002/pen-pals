@@ -9,7 +9,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -27,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import com.penpals.model.CartItem;
@@ -53,7 +53,8 @@ public class ProductPageGui extends JFrame implements MouseListener, ActionListe
 			
 				private JLabel productNameLabel;
 				private JLabel descriptionLabel;
-				private JLabel productDescriptionLabel;
+				private JTextArea productDescriptionLabel;
+				//private JLabel productDescriptionLabel;
 				private JLabel stockLabel;
 
 			private JPanel ratingHistogramPanel;
@@ -149,7 +150,7 @@ private ShoppingCart cart;
 		        //add Discount Percentage beside price (if any) 
 		        if(product.getProductHasPromotion())
 		        {
-				            double discount = new ProductController().getProductPromotionPercentage(product.getProductId());//delete it later, retrieve discount from database
+				            double discount = new ProductController().getProductPromotionPercentage(product.getProductId());
 				            String discountString = String.valueOf(discount);
 				            discountString = " - " + discountString + "%";
 			            discountLabel = new JLabel(discountString);
@@ -159,28 +160,30 @@ private ShoppingCart cart;
 		        }
 		
 		        pricePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		        
+		      
 	
 			        //Name label
 			        String name = product.getProductName(); 
 		        productNameLabel = new JLabel(name);
 		        productNameLabel.setFont(new Font("Arial", Font.PLAIN, 21));
 		        productNameLabel.setBorder(new EmptyBorder(10, 5, 5, 5));
-	        
-	        
+		     
 		        //Description label
 		        descriptionLabel = new JLabel("Description:");
 		        descriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
 		        descriptionLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-	        
-	        
+		    
 		        //String label
 		        String description = product.getProductDescription();  
-
-		        productDescriptionLabel = new JLabel(description);
-		        productDescriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		        productDescriptionLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
 	
+
+		        productDescriptionLabel = new JTextArea(description);
+		        productDescriptionLabel.setEditable(false);
+		       // productDescriptionLabel = new JLabel(description);
+		        productDescriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		        productDescriptionLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+		        productDescriptionLabel.setBackground(new Color(235, 217, 209));
+		        productDescriptionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		        //add stock number
 		        int stock = product.getProductStockQuantity();
 		        String stockString =  String.valueOf(stock);

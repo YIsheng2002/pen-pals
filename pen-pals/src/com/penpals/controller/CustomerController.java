@@ -21,9 +21,10 @@ public class CustomerController extends Controller{
 
     public Customer getCustomerDetailbyUsernamePassword(String username, String password)
     {
-        Customer customer = new Customer();
+    	Customer customer = null;
         try
         {
+        	customer = new Customer();
             String sql = "SELECT id, name, email, telNumber, username, password FROM customer WHERE username = ? AND password = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
@@ -43,7 +44,7 @@ public class CustomerController extends Controller{
         {
             System.out.println(err.getMessage());
         }
-
+        
         return customer;
     }
 

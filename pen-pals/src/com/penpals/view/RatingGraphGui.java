@@ -1,8 +1,6 @@
 package com.penpals.view;
 
 import javax.swing.JPanel;  
-import javax.swing.SwingUtilities;  
-  
 import org.jfree.chart.ChartFactory;  
 import org.jfree.chart.ChartPanel;  
 import org.jfree.chart.JFreeChart;  
@@ -12,8 +10,6 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.axis.NumberAxis;
-import java.util.HashMap;
-import java.awt.Color;
   
 public class RatingGraphGui extends JPanel {  
   
