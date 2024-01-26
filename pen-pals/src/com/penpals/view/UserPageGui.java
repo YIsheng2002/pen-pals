@@ -9,28 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import com.penpals.model.Address;
-import com.penpals.model.CartItem;
-import com.penpals.model.Coupon;
 import com.penpals.model.Customer;
-import com.penpals.model.Order;
-import com.penpals.model.Product;
-import com.penpals.model.ProductCategory;
-import com.penpals.model.ShoppingCart;
-
 import java.awt.Font;
 
 public class UserPageGui extends JFrame implements ActionListener, MouseListener{
@@ -108,7 +93,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 		        //username label
 		        usernameLabel = new JLabel();
 		        usernameLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		        usernameLabel.setText("Username");
+		        usernameLabel.setText(cus.getCustomerName());
 		        usernameLabel.addMouseListener(this);
 	        userPanel.add(usernameLabel);
 	    
@@ -117,7 +102,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	        	//voucher Panel
 		        voucherPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		        	voucherIcon = createResizedIcon("/resources/uiSymbol/voucher.png", 50,50); 
-					 voucherButton = new JButton("Vouchers						",voucherIcon);
+					 voucherButton = new JButton("Coupons						",voucherIcon);
 					 voucherButton.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 					 voucherButton.setPreferredSize(new Dimension(450,100));
 					 voucherButton.addActionListener(this);
@@ -194,7 +179,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
+		if(e.getSource()==voucherButton || e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
@@ -203,7 +188,7 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
+		if(e.getSource()==voucherButton ||e.getSource()==orderHistoryButton || e.getSource()==cartButton||e.getSource()==userImageLabel || e.getSource()==usernameLabel||e.getSource()==backButton)
 		{
 			setCursor(Cursor.getDefaultCursor());
 		}
@@ -216,6 +201,12 @@ public class UserPageGui extends JFrame implements ActionListener, MouseListener
 		{
 			dispose();
 			OrderHistoryGui frame = new OrderHistoryGui(cus);
+			frame.setVisible(true);
+		}
+		else if(e.getSource()==voucherButton)
+		{
+			dispose();
+			CouponGui frame = new CouponGui(cus,this);
 			frame.setVisible(true);
 		}
 		else if(e.getSource()==cartButton)

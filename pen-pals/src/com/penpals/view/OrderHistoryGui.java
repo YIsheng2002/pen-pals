@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -14,7 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,9 +20,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import com.penpals.model.Customer;
 import com.penpals.model.Order;
+import com.penpals.controller.OrderController;
 import java.awt.Font;
 
 public class OrderHistoryGui extends JFrame  implements ActionListener, MouseListener{
@@ -49,6 +47,10 @@ public class OrderHistoryGui extends JFrame  implements ActionListener, MouseLis
 					private JLabel dateLabel;
 				private JPanel southRightPanel;
 					private JLabel totalPriceLabel;
+
+private OrderController orderController = new OrderController();
+private List<Order> orders;
+
 private Customer cus;
 	/**
 	 * Create the frame.
@@ -60,7 +62,8 @@ private Customer cus;
 	
 	public void init(Customer cus)
 	{
-		List<Order> orders = cus.getCustomerOrders();
+		orders = orderController.getAllOrdersbyCustomerId(cus.getCustomerId());
+		cus.setCustomerOrders(orders);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setTitle("Penpals Gift Shop");
@@ -149,7 +152,7 @@ private Customer cus;
 				}
 				else
 				{
-					completeStatus = "Confirmed";
+					completeStatus = "Waiting for Confirmation";
 				}
 			statusLabel.setText("Status : " + completeStatus + ", " + deliveryStatus);
 			statusLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -159,8 +162,7 @@ private Customer cus;
 			southPanel = new JPanel(new BorderLayout());
 				
 				southLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-						//dummy data
-						String date = "2023/2/2";
+						String date = order.getOrderDate();
 					dateLabel = new JLabel(date);
 				southLeftPanel.add(dateLabel);
 			southPanel.add(southLeftPanel,BorderLayout.LINE_START);

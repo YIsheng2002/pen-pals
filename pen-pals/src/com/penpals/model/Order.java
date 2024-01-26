@@ -5,14 +5,14 @@ import java.util.List;
 
 public class Order {
     private int id;
-    private Date date;
+    private String date;
     private boolean isDelivered;
     private boolean isCompleted;
     private double total;
     private Customer customer;
     private List<CartItem> cartItems;
 
-    public Order(int id, Date date, boolean isDelivered, boolean isCompleted, double total, Customer customer, List<CartItem> cartItems) {
+    public Order(int id, String date, boolean isDelivered, boolean isCompleted, double total, Customer customer, List<CartItem> cartItems) {
         this.id = id;
         this.date = date;
         this.isDelivered = false;
@@ -25,7 +25,7 @@ public class Order {
     public Order()
     {
         this.id = 0;
-        this.date = new Date();
+        this.date = "";
         this.isDelivered = false;
         this.total = 0.0;
         this.cartItems = null;
@@ -40,11 +40,11 @@ public class Order {
         this.id = id;
     }
 
-    public Date getOrderDate() {
+    public String getOrderDate() {
         return date;
     }
 
-    public void setOrderDate(Date date) 
+    public void setOrderDate(String date) 
     {
         this.date = date;
     }

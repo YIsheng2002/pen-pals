@@ -9,6 +9,12 @@ public class CartItem {
         this.product = product;
     }
 
+    public CartItem()
+    {
+        this.quantity = 0;
+        this.product = null;
+    }
+
     public int getCartItemQuantity() {
         return quantity;
     }

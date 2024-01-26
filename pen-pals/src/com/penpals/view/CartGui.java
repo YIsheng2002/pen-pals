@@ -2,14 +2,10 @@ package com.penpals.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -19,8 +15,6 @@ import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,25 +23,25 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
+import com.penpals.controller.ShoppingCartController;
+import com.penpals.controller.ProductController;
 import com.penpals.model.CartItem;
 import com.penpals.model.Customer;
 import com.penpals.model.Order;
-import com.penpals.model.Product;
-import com.penpals.model.ProductCategory;
+import com.penpals.model.ShoppingCart;
 
 public class CartGui extends JFrame implements  MouseListener, ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	List<CartItem> selectedItems=new ArrayList<>();
-	List<CartItem> cartItems=new ArrayList<>();
+	ShoppingCart cart;
 	Order order;
 	double totalPrice = 0;
 	DecimalFormat df ;
+
+
 	//north
 	private JPanel northPanel;
 		private JPanel northLeftPanel;
@@ -109,10 +103,11 @@ private JFrame callingFrame;
 	}
 	
 	public void init(Customer cus) {
-		//cartItems = loadCartItems();
-		cartItems = cus.getCustomerShoppingCart().getShoppingCartItems();
+		cart = new ShoppingCartController().getShoppingCartDetailbyCustomerId(cus.getCustomerId());
+		System.out.println(selectedItems);
+
 		setBounds(100, 100, 500, 300);
-		setTitle("Penpals Gift Shop");
+		setTitle("Penpals Gift Shop - Cart");
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -151,7 +146,7 @@ private JFrame callingFrame;
 			cartItemsPanel = new JPanel(new GridLayout(0,1,0,0));
 			
 		 
-			for(CartItem cartItem : cartItems) 
+			for(CartItem cartItem : cart.getShoppingCartItems()) 
 			{
 				cartItemPanel = createProductPanel(cartItem);
 				cartItemsPanel.add(cartItemPanel);
@@ -340,7 +335,7 @@ private JFrame callingFrame;
 		frame.setVisible(true);
 	}
 	
-	public List<CartItem> loadCartItems()  //dummy data , call controller function later
+	/*public List<CartItem> loadCartItems()  //dummy data , call controller function later
 	{
 		ProductCategory category = new ProductCategory(1, "Sample Category");
 		
@@ -363,7 +358,7 @@ private JFrame callingFrame;
         return cartItems;
 		   
 		
-	}
+	}*/
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -402,6 +397,25 @@ private JFrame callingFrame;
 	}
 	
 	private void updateQty(int change, JLabel qtyLabel, JLabel priceLabel, double price, JCheckBox checkBox,CartItem cartItem) {
+		if (change == 1){
+			if (new ProductController().getProductStockQuantity(cartItem.getCartItemProduct().getProductId()) < cartItem.getCartItemQuantity() + change) {
+				JOptionPane.showMessageDialog(null, "Not enough stock quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		} else if (change == -1){
+			if (cartItem.getCartItemQuantity() + change < 1) {
+				int response = JOptionPane.showConfirmDialog(this, "Are you sure to remove " + cartItem.getCartItemProduct().getProductName() + " from cart?", "Remove Item", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (response == JOptionPane.YES_OPTION) {
+					//remove cartItem from database, cartItem as parameter
+					new ShoppingCartController().removeItemFromCart(cart.getShoppingCartId(), cartItem.getCartItemProduct().getProductId());
+					dispose();
+					CartGui frame = new CartGui(cus,callingFrame);
+					frame.setVisible(true);
+				} else {
+					return;
+				}
+			}
+		}
 		df = new DecimalFormat("#.00");
 	    String qtyString = String.valueOf(cartItem.getCartItemQuantity());
 	    int qty = Integer.parseInt(qtyString) + change;
@@ -470,6 +484,7 @@ private JFrame callingFrame;
 						for(CartItem cartItem : selectedItems)
 						{
 							//remove cartItem from database, cartItem as parameter
+							new ShoppingCartController().removeItemFromCart(cart.getShoppingCartId(), cartItem.getCartItemProduct().getProductId());
 						}
 						dispose();
 						CartGui frame = new CartGui(cus,callingFrame);

@@ -1,19 +1,21 @@
 package com.penpals.model;
 
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Promotion extends Discount{
     private String name;
     private Date startDate;
     private Date endDate;
-    private Product product;
+    private List<Product> products;
 
-    public Promotion(int id, double discountPercentage, String description,String name, Date startDate, Date endDate, Product product) {
+    public Promotion(int id, double discountPercentage, String description,String name, Date startDate, Date endDate, List<Product> products) {
         super(id, discountPercentage, description);
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.product = product;
+        this.products = products;
     }
 
     public Promotion()
@@ -21,7 +23,7 @@ public class Promotion extends Discount{
         this.name = "";
         this.startDate = new Date();
         this.endDate = new Date();
-        this.product = new Product();
+        this.products = new ArrayList<Product>();
     }
 
     public String getPromotionName() {
@@ -51,12 +53,12 @@ public class Promotion extends Discount{
         this.endDate = endDate;
     }
 
-    public Product getPromotionProduct() {
-        return product;
+    public List<Product> getPromotionProducts() {
+        return products;
     }
 
-    public void setPromotionProduct(Product product) 
+    public void setPromotionProducts(List<Product> products) 
     {
-        this.product = product;
+        this.products = products;
     }
 }

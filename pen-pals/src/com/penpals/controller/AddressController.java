@@ -20,14 +20,14 @@ public class AddressController extends Controller{
         }
     }
 
-    public Address getAddressDetailbyId(int id)
+    public Address getAddressDetailbyCustomerId(int cusId)
     {
         Address address = new Address();
         try
         {
-            String sql = "SELECT (number, road, postcode, state) FROM address WHERE ID = ?";
+            String sql = "SELECT number, road, postcode, state FROM address WHERE customer_id_fk = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, cusId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
@@ -42,5 +42,41 @@ public class AddressController extends Controller{
         }
 
         return address;
+    }
+
+    public void updateAddressDetail(Address address, int cusId)
+    {
+        try
+        {
+            String sql = "UPDATE address SET number = ?, road = ?, postcode = ?, state = ? WHERE customer_id_fk = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, address.getNumber());
+            ps.setString(2, address.getRoad());
+            ps.setInt(3, address.getPostcode());
+            ps.setString(4, address.getState());
+            ps.setInt(5, cusId);
+            ps.executeUpdate();
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void insertAddressDetail(Address address, int cusId)
+    {
+        try
+        {
+            String sql = "INSERT INTO address (number, road, postcode, state, customer_id_fk) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, address.getNumber());
+            ps.setString(2, address.getRoad());
+            ps.setInt(3, address.getPostcode());
+            ps.setString(4, address.getState());
+            ps.setInt(5, cusId);
+            ps.executeUpdate();
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
     }
 }

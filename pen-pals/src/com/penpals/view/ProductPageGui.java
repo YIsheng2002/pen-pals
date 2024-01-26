@@ -9,7 +9,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -27,11 +26,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
 import com.penpals.model.CartItem;
+import com.penpals.model.ShoppingCart;
 import com.penpals.model.Customer;
 import com.penpals.model.Product;
+import com.penpals.model.Feedback;
+
+import com.penpals.controller.*;
 
 public class ProductPageGui extends JFrame implements MouseListener, ActionListener{
 
@@ -49,8 +53,11 @@ public class ProductPageGui extends JFrame implements MouseListener, ActionListe
 			
 				private JLabel productNameLabel;
 				private JLabel descriptionLabel;
-				private JLabel productDescriptionLabel;
+				private JTextArea productDescriptionLabel;
+				//private JLabel productDescriptionLabel;
 				private JLabel stockLabel;
+
+			private JPanel ratingHistogramPanel;
 				
 			private JLabel feedbackString;
 			private JPanel feedbackPanel;
@@ -77,12 +84,13 @@ public class ProductPageGui extends JFrame implements MouseListener, ActionListe
 private Customer cus;
 private Product product;
 private BrowseProductGui callingFrame;
+private ShoppingCart cart;
 
 	/**
 	 * Create the frame.
 	 */
 	
-	public ProductPageGui(BrowseProductGui callingFrame,Customer cus,Product product) { 
+	public ProductPageGui(BrowseProductGui callingFrame, Customer cus, Product product) { 
 		this.cus = cus;
 		this.product = product;
 		this.callingFrame = callingFrame;
@@ -93,8 +101,10 @@ private BrowseProductGui callingFrame;
 	private void init(Customer cus,Product product) 
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 1000, 900, 700);
+		//setBounds(200, 1000, 900, 700);
+		//setBounds(200, 1000, 900, 700);
 		setMinimumSize(new Dimension(900,700));
+		setPreferredSize(new Dimension(900,700));
 		setTitle("Penpals Gift Shop");
 		
 			contentPane = new JPanel();
@@ -103,7 +113,7 @@ private BrowseProductGui callingFrame;
 		
 			//Image Label
 	        resizedIcon = createResizedIcon(product.getProductImageURL(), 700, 500); //uncomment it later
-//				resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
+			//resizedIcon = createResizedIcon("/resources/productImage/Key Chain.jpg", 700, 500); //delete it later 
 	        imageLabel = new JLabel(resizedIcon);
 	        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 	        imageLabel.setVerticalAlignment(JLabel.CENTER);
@@ -138,40 +148,42 @@ private BrowseProductGui callingFrame;
 	
 	        
 		        //add Discount Percentage beside price (if any) 
-		//        if(has discount)
-		//        {
-				            double discount = 9.80; //delete it later, retrieve discount from database
+		        if(product.getProductHasPromotion())
+		        {
+				            double discount = new ProductController().getProductPromotionPercentage(product.getProductId());
 				            String discountString = String.valueOf(discount);
 				            discountString = " - " + discountString + "%";
 			            discountLabel = new JLabel(discountString);
 			            discountLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 			            discountLabel.setVerticalAlignment(JLabel.CENTER);
 		            pricePanel.add(discountLabel);        	
-		//        }
+		        }
 		
 		        pricePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		        
+		      
 	
 			        //Name label
 			        String name = product.getProductName(); 
 		        productNameLabel = new JLabel(name);
 		        productNameLabel.setFont(new Font("Arial", Font.PLAIN, 21));
 		        productNameLabel.setBorder(new EmptyBorder(10, 5, 5, 5));
-	        
-	        
+		     
 		        //Description label
 		        descriptionLabel = new JLabel("Description:");
 		        descriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
 		        descriptionLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
-	        
-	        
+		    
 		        //String label
 		        String description = product.getProductDescription();  
-
-		        productDescriptionLabel = new JLabel(description);
-		        productDescriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		        productDescriptionLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
 	
+
+		        productDescriptionLabel = new JTextArea(description);
+		        productDescriptionLabel.setEditable(false);
+		       // productDescriptionLabel = new JLabel(description);
+		        productDescriptionLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		        productDescriptionLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+		        productDescriptionLabel.setBackground(new Color(235, 217, 209));
+		        productDescriptionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		        //add stock number
 		        int stock = product.getProductStockQuantity();
 		        String stockString =  String.valueOf(stock);
@@ -193,6 +205,9 @@ private BrowseProductGui callingFrame;
 
 	        //to separate the comments with upper elements
 	        JPanel emptySpace = new JPanel();
+
+			double[] ratingCount = new ProductController().getRatingCountList(product.getProductId());
+			ratingHistogramPanel = new RatingGraphGui(ratingCount).getChartPanel();
 	        
 	        //add comment string to indicate ratings and reviews section
 	        feedbackString = new JLabel("Comments :");
@@ -202,38 +217,34 @@ private BrowseProductGui callingFrame;
         
         centerContainer.add(centerPanel);
         centerContainer.add(emptySpace);
+		centerContainer.add(ratingHistogramPanel);
+		centerContainer.add(emptySpace);
         centerContainer.add(feedbackString);
         
         
 
 	        //display feedback
 	       //retrieve feedback data form database
-	        //dummy feedback data
-	        ArrayList<String> feedbacks = new ArrayList<>();
-	        feedbacks.add("Good");
-	        feedbacks.add("Nice");
-	        feedbacks.add("Bad");
-	        feedbacks.add("Excellent");
-	        feedbacks.add("Rubbish");
+	        List<Feedback> feedbacks = new FeedbackController().getAllFeedback(product.getProductId());
 	        
 	        // For Each Loop for iterating ArrayList
-	        for (String feedback : feedbacks)
+	        for (Feedback feedback : feedbacks)
 	        {
 	        	feedbackPanel = new JPanel(new GridLayout(0,1,0,0));
 	        	
-		        	feedbackLabel = new JLabel(feedback);
+		        	feedbackLabel = new JLabel(feedback.getFeedbackReview());
 		        	feedbackLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 19));
 		        	
 		        	ratingPanel = new JPanel(new FlowLayout(FlowLayout.LEADING,0,0));
 		        	
 		            //int ratings = feedback.getRatings(); //uncomment it later
-			            int ratings = 3; //delete it later
+			            int ratings = feedback.getFeedbackRating(); //delete it later
 			            ratingsLabel = new JLabel("Ratings: ");
 			            ratingsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 17 ));
 		            ratingPanel.add(ratingsLabel);
 		            
 		            //display star based on ratings 
-		            for(int i = 1 ; i <= 5 ; i++)
+		            for(int i = 1 ; i <= ratings ; i++)
 		            {
 			            	starLabel = new JLabel();
 			            		starIcon = createResizedIcon("/resources/uiSymbol/ratingStar.png",18,12);
@@ -308,7 +319,7 @@ private BrowseProductGui callingFrame;
 	        contentPane.add(centerContainer,BorderLayout.CENTER);
 	        
         getContentPane().add(scrollableBrowseArea, BorderLayout.CENTER);  
-        pack();
+        //pack();
         setVisible(true);
     }
 
@@ -328,8 +339,9 @@ private BrowseProductGui callingFrame;
 		// TODO Auto-generated method stub
 		if(e.getSource()==addToCartButton)
 		{
+			cart = new ShoppingCartController().getShoppingCartDetailbyCustomerId(cus.getCustomerId());
 			//add to cart (controller function)
-			
+			new ShoppingCartController().addItemToCart(cart.getShoppingCartId(), product.getProductId());
 			JOptionPane.showMessageDialog(null, "Product is added to cart successfully.","Add To Cart", JOptionPane.INFORMATION_MESSAGE);
 			
 		}

@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -13,13 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,11 +24,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import com.penpals.db.MyDatabase;
 import com.penpals.model.CartItem;
 import com.penpals.model.Customer;
 import com.penpals.model.Order;
+
+import com.penpals.controller.FeedbackController;
 
 
 public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, MouseListener{
@@ -67,6 +61,7 @@ public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, Mo
 		private  List<CartItem> cartItems;
 		private Order order;
 		private Customer cus;
+		private FeedbackController feedbackController = new FeedbackController();
 	//North label
 	private JLabel label;
 	
@@ -86,6 +81,9 @@ public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, Mo
 	//private void initializeComponents(Order orders)
 	private void init(Order order)
 	{
+		for (CartItem cartItem : order.getOrderCartItems()) {
+			System.out.println(cartItem.getCartItemProduct().getProductName());
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900,700);
 		setTitle("Penpals Gift Shop");
@@ -301,6 +299,18 @@ public class RatingsAndFeedbackGui extends JFrame  implements ActionListener, Mo
 	                JOptionPane.showMessageDialog(null, "Please enter an integer (1-5) for ratings");
 	                return; // Exit the method if validation fails
 	            }
+	        }
+	    }
+		for (int i = 0; i < commentPanels.getComponentCount(); i++) {
+	        Component component = commentPanels.getComponent(i);
+	        if (component instanceof JPanel) {
+	            JPanel commentPanel = (JPanel) component;
+
+	            // Retrieve ratingTextField and feedbackTextField for each product
+	            JTextField ratingTextField = getRatingTextField(commentPanel);
+	            JTextField feedbackTextField = getFeedbackTextField(commentPanel);
+
+				feedbackController.addproductReview(cartItems.get(i).getCartItemProduct().getProductId(), cus.getCustomerId(),Integer.parseInt(ratingTextField.getText()),feedbackTextField.getText());
 	        }
 	    }
 

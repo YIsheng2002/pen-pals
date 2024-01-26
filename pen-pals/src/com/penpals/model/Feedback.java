@@ -7,14 +7,14 @@ public class Feedback {
     private String review;
     private Date date;
     private int rating;
-    private Product product;
+    private int productId;
 
-    public Feedback(int id, String review, Date date, int rating, Product product) {
+    public Feedback(int id, String review, Date date, int rating, int productId) {
         this.id = id;
         this.review = review;
         this.date = date;
         this.rating = rating;
-        this.product = product;
+        this.productId = productId;
     }
 
     public Feedback()
@@ -23,7 +23,7 @@ public class Feedback {
         this.review = "";
         this.date = new Date();
         this.rating = 0;
-        this.product = new Product();
+        this.productId = 0;
     }
 
     public int getFeedbackId() {
@@ -62,12 +62,12 @@ public class Feedback {
         this.rating = rating;
     }
 
-    public Product getFeedbackProduct() {
-        return product;
+    public int getFeedbackProductId() {
+        return productId;
     }
 
-    public void setFeedbackProduct(Product product) 
+    public void setFeedbackProductId(int productId) 
     {
-        this.product = product;
+        this.productId = productId;
     }
 }

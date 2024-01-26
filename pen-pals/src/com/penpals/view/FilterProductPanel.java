@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,6 +25,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Cursor;
+
+import com.penpals.controller.*;
 
 public class FilterProductPanel extends JPanel implements MouseListener, ActionListener{
 	
@@ -46,16 +49,19 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 			private JTextField maxPriceField;
 			
 		private JPanel southPanel;
+			private JPanel ratingPanel;
 			private JLabel ratingsLabel;
 				private JComboBox ratingsBox;
+				
+			private JCheckBox checkBox;
 				
 			private JPanel buttonPanel;
 				private JButton resetButton;
 				private JButton applyButton;
 				
 
-		//private List<ProductCategory> categories = new ArrayList<>();
-		private Integer[] ratingsArray = {1,2,3,4,5};
+		
+		private Integer[] ratingsArray = {0,1,2,3,4,5};
 		private String[] categoriesArray;
 		
 		private int ratings ;
@@ -64,6 +70,7 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 		private String maxPriceString="";
 		private double minPrice ;
 		private double maxPrice ;
+		private boolean isPromote;
 		
 		private BrowseProductGui frame;
 		
@@ -134,14 +141,27 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
    			
    					
    			southPanel = new JPanel(new BorderLayout());
-   				ratingsLabel = new JLabel("Ratings Above");
-   				ratingsLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
-			southPanel.add(ratingsLabel,BorderLayout.NORTH);
-   				ratingsBox = new JComboBox(ratingsArray);
-   				ratingsBox.setBorder(new EmptyBorder(5, 35, 20, 35));
-   				ratingsBox.addActionListener(this);
+   				ratingPanel = new JPanel(new BorderLayout());
+   				
+	   				ratingsLabel = new JLabel("Ratings Above");
+	   				ratingsLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+   				ratingPanel.add(ratingsLabel,BorderLayout.PAGE_START);
+	   				
+				
+	   				ratingsBox = new JComboBox(ratingsArray);
+	   				ratingsBox.setBorder(new EmptyBorder(5, 35, 20, 35));
+	   				ratingsBox.addActionListener(this);
+   				ratingPanel.add(ratingsBox,BorderLayout.CENTER);
 
-			southPanel.add(ratingsBox,BorderLayout.CENTER);
+			southPanel.add(ratingPanel,BorderLayout.PAGE_START);
+			
+			
+				checkBox = new JCheckBox("In promotion");
+				checkBox.addMouseListener(this);
+				checkBox.addActionListener(this);
+				checkBox.setBorder(new EmptyBorder(5, 35, 20, 35));
+				
+			southPanel.add(checkBox,BorderLayout.CENTER);
 			
 				buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 				
@@ -168,12 +188,12 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 	{
 		List<String> categoriesList = new ArrayList<>();
 		categoriesList.add("All");
-		categoriesList.add("category1");
-		categoriesList.add("category2");
-		categoriesList.add("category3");
-		categoriesList.add("category4");
-		categoriesList.add("category5");
-		categoriesList.add("category6");
+		List<ProductCategory> categories = new ProductCategoryController().getAllProductCategory();
+		for(ProductCategory category : categories)
+		{
+			categoriesList.add(category.getProductCategoryName());
+		}
+		
 		categoriesArray = categoriesList.toArray(new String[categoriesList.size()]);
 		return categoriesArray;
 	}
@@ -184,33 +204,33 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 		if(e.getSource()==categoryBox)
 		{
 			category = (String) categoryBox.getSelectedItem();
-			System.out.println(category);
 		}
 		else if(e.getSource()==ratingsBox)
 		{
 			ratings = (int) ratingsBox.getSelectedItem();
-			System.out.println(ratings);
 		}
 		else if(e.getSource()==applyButton)
 		{
 			category = (String) categoryBox.getSelectedItem();
 			ratings = (int) ratingsBox.getSelectedItem();
+			isPromote = checkBox.isSelected();
 			
 			if(!maxPriceField.getText().equals("Max Price")&&!minPriceField.getText().equals("Min Price")&&!maxPriceField.getText().isEmpty()&&!minPriceField.getText().isEmpty())
 			{
 				maxPriceString = maxPriceField.getText();
 				minPriceString = minPriceField.getText();
+				System.out.println(maxPriceString);
 				
 				try {
 					maxPrice = Double.parseDouble(maxPriceString);
 					minPrice = Double.parseDouble(minPriceString);
 					if(maxPrice < minPrice)
 					{
-						JOptionPane.showMessageDialog(null, "Invalid input for price range","Price Range",JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Maximum Price cannot be less than minimun price","Price Range",JOptionPane.ERROR_MESSAGE);
 					}
 					else
 					{
-						filter();
+						filterPrice();
 					}
 				}catch(NumberFormatException nfe)
 				{
@@ -227,12 +247,23 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 		}
 		else if(e.getSource()==resetButton)
 		{
-			
+			// reset all filter field
+			categoryBox.setSelectedIndex(0);
+			ratingsBox.setSelectedIndex(0);
+			minPriceField.setText("Min Price");
+			minPriceField.setForeground(new Color(146, 146, 146));
+			maxPriceField.setText("Max Price");
+			maxPriceField.setForeground(new Color(146, 146, 146));
+			checkBox.setSelected(false);
 			List<Product> products = new ArrayList<>();
-			products = frame.loadData();
-			//product = loadAllProducts();
+			// LOAD ALL PRODUCT
+			products = new ProductController().getAllProduct();
 			frame.setProducts(products);
 			frame.repaintProductPanel(frame.getProducts());
+		}
+		else if(e.getSource()==checkBox)
+		{
+			//filter by promotion 
 		}
 		
 	}
@@ -267,7 +298,7 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton)
+		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton||e.getSource()==checkBox)
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
@@ -277,7 +308,7 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton)
+		if(e.getSource()==maxPriceField||e.getSource()==minPriceField||e.getSource()==applyButton||e.getSource()==resetButton||e.getSource()==checkBox)
 		{
 			setCursor(Cursor.getDefaultCursor());
 		}
@@ -286,47 +317,66 @@ public class FilterProductPanel extends JPanel implements MouseListener, ActionL
 	public void filter()
 	{
 		//filter in database
-		List<Product> products = new ArrayList<>();
-		products = filterProduct();
-		//product = loadAllProducts();
-		frame.setProducts(products);
-		frame.repaintProductPanel(frame.getProducts());
-		
-	}
-	//dummy data
-	public List<Product> filterProduct()
-	{
-		List<Product> products = new ArrayList<>();
-		
-		ProductCategory category = new ProductCategory(1, "Electronics");
-		// Create a sample product
-        Product product1 = new Product(1, "Producdwqeet 1", "Description 1", 19.99, 10, category, "/resources/productImage/Wooden Key Chain.jpg");
-        Product product2 = new Product(2, "Produwqeqct 2", "Description 2", 29.99, 15, category, "/resources/productImage/White Bear.jpg");
-        Product product3 = new Product(3, "Prodeqweuct 3", "Description 3", 39.99, 20, category, "/resources/productImage/Key Chain.jpg");
-
-        Product product4 = new Product(1, "Prodqweqweuct 1", "Description 1", 19.99, 10, category, "/resources/productImage/White Bear.jpg");
-        Product product5 = new Product(2, "Prodqweeuct 2", "Description 2", 29.99, 15, category, "/resources/productImage/Wooden Key Chain.jpg");
-        Product product6 = new Product(3, "Produqweect 3", "Description 3", 39.39, 20, category, "/resources/productImage/White Bear.jpg");
-        Product product7 = new Product(1, "Prodqweqeuct 1", "Description 1", 79.99, 10, category, "/resources/productImage/White Bear.jpg");
-        Product product8 = new Product(2, "Produqwect 2", "Description 2", 212.99, 15, category, "/resources/productImage/White Bear.jpg");
-        Product product9 = new Product(3, "Produqwect 3", "Description 3", 329.99, 20, category, "/resources/productImage/White Bear.jpg");
-
-        Product product10 = new Product(3, "Prodqwesuct 3", "Description 3", 3359.99, 20, category, "/resources/productImage/White Bear.jpg");
-        
-        products.add(product3);
-        products.add(product1);
-        products.add(product2);
-        products.add(product4);
-        products.add(product5);
-        products.add(product6);
-        products.add(product7);
-        products.add(product8);
-        products.add(product9);
-        products.add(product10);
-        
-        return products;
+		if (category.equals("All") && !isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllProductbyRating(ratings);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		}  else if (category.equals("All") && isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllPromotionProduct(ratings);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		} else if (!category.equals("All") && !isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllProductByCategory(category,ratings);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		} else if (!category.equals("All") && isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllPromotionProductByCategory(category, ratings);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		}  else {
+			System.out.println("Error");
+			System.out.println("More error");
+		}
 	}
 	
+	public void filterPrice(){
+		//filter in database
+		if (category.equals("All") && !isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllProductbyRatingAndPrice(ratings, minPriceString, maxPriceString);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		}  else if (category.equals("All") && isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllPromotionProductbyPrice(ratings, minPriceString, maxPriceString);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		} else if (!category.equals("All") && !isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllProductByCategoryAndPrice(category,ratings, minPriceString, maxPriceString);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		} else if (!category.equals("All") && isPromote)
+		{
+			List<Product> products = new ArrayList<>();
+			products = new ProductController().getAllPromotionProductByCategoryAndPrice(category, ratings, minPriceString, maxPriceString);
+			frame.setProducts(products);
+			frame.repaintProductPanel(frame.getProducts());
+		}  else {
+			System.out.println("Error");
+		}
+	}
 
 }
 
