@@ -88,4 +88,64 @@ public class CustomerController extends Controller{
             System.out.println(err.getMessage());
         }
     }
+
+    public boolean checkUserbyEmail(String email)
+    {
+        boolean result = false;
+        try
+        {
+            String sql = "SELECT * FROM customer WHERE email = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+            {
+                result = true;
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return result;
+    }
+
+    public boolean checkUserbyUsername(String username)
+    {
+        boolean result = false;
+        try
+        {
+            String sql = "SELECT * FROM customer WHERE username = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+            {
+                result = true;
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return result;
+    }
+
+    public boolean checkUserbyPhoneNumber(String phoneNumber)
+    {
+        boolean result = false;
+        try
+        {
+            String sql = "SELECT * FROM customer WHERE telNumber = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, phoneNumber);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+            {
+                result = true;
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return result;
+    }
 }

@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.List;
+
+import com.penpals.model.Payment;
+
 import java.util.ArrayList;
 
 public class PaymentController extends Controller{
@@ -34,5 +37,27 @@ public class PaymentController extends Controller{
         {
             System.out.println(err.getMessage());
         }
+    }
+
+    public Payment getPayment(int orderId)
+    {
+        Payment payment = new Payment();
+        try{
+            String query = "SELECT * FROM payment WHERE order_id_fk = ?;";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                payment.setPaymentId(rs.getInt("id"));
+                payment.setPaymentAmount(rs.getDouble("amount"));
+                payment.setPaymentDate(rs.getDate("payment_date"));
+                payment.setPaymentMethod(rs.getString("method"));
+            }
+        } catch (SQLException err)
+        {
+            System.out.println(err.getMessage());
+        }
+        return payment;
     }
 }

@@ -33,7 +33,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 
 	ProductController productController = new ProductController();
 	private static final long serialVersionUID = 1L;
-	private List<Product> products= productController.getAllProduct();
+	private List<Product> products = productController.getAllProduct();
 	
     private FilterProductPanel filterPanel;
 
@@ -58,8 +58,10 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 			
 		//center panel
 		private JScrollPane scrollableBrowseArea;
+			//grid layout panel
 			private JPanel productPanel;
-				private JPanel productPanelItem;
+				private JPanel productPanelRow;
+					private JPanel productPanelItem;
 //					private JLabel productImageLabel;
 //						private ImageIcon productImage;
 //				private JLabel productNameLabel;
@@ -99,7 +101,7 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 		getContentPane().add(filterPanel, BorderLayout.LINE_START);
 
       
-       //pack();
+       pack();
        setVisible(true);
 	}
 
@@ -162,13 +164,19 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 	
 	
 	   //JPanel for products
-	    productPanel = new JPanel(new GridLayout(0, 3, 20, 50));
+	    productPanel = new JPanel(new GridLayout(0, 1, 20, 50));
 	
 	   //load product list 
-	    for (Product product : products) {
-	    	productPanelItem = createProductPanel(product);
-	    	productPanel.add(productPanelItem);
-	   }
+		for (int i = 0; i < products.size(); i++) {
+			if (i % 3 == 0) {
+				productPanelRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+				productPanelRow.setOpaque(false);
+				productPanel.add(productPanelRow);
+			}
+			Product product = products.get(i);
+			productPanelItem = createProductPanel(product);
+			productPanelRow.add(productPanelItem);
+		}
 	
 	   scrollableBrowseArea = new JScrollPane(productPanel);
 	   scrollableBrowseArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -202,6 +210,9 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 	{
 		 // Create a panel for each product with a BorderLayout
         JPanel productPanelItem = new JPanel(new BorderLayout());
+		productPanelItem.setPreferredSize(new Dimension(360,420));
+		productPanelItem.setMaximumSize(new Dimension(360,420));
+		productPanelItem.setMinimumSize(new Dimension(360,420));
         // Create a JLabel for the image
          	JLabel productImageLabel = new JLabel("");
          			ImageIcon productImage = createResizedIcon(product.getProductImageURL(), 300, 300);
@@ -270,7 +281,6 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
         productPanelItem.add(productImageLabel, BorderLayout.NORTH);
         productPanelItem.add(productNameLabel, BorderLayout.CENTER);
         productPanelItem.add(productPriceLabel, BorderLayout.SOUTH);
-     
 
        return productPanelItem;
 	}
@@ -336,15 +346,16 @@ public class BrowseProductGui extends JFrame implements MouseListener, ActionLis
 		productPanel.removeAll();
 		//dummy data , has to call controller function
 		
-		    for (Product product : products) {
-		        // Perform case-insensitive substring match
-				System.out.println("Product I get is");
-				System.out.println(product.getProductName());
-				System.out.println(product.getProductImageURL());
-				System.out.println(product.getProductPrice());
-		    	productPanelItem = createProductPanel(product);
-		    	productPanel.add(productPanelItem);
-		    }
+		for (int i = 0; i < products.size(); i++) {
+			if (i % 3 == 0) {
+				productPanelRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 50));
+				productPanelRow.setOpaque(false);
+				productPanel.add(productPanelRow);
+			}
+			Product product = products.get(i);
+			productPanelItem = createProductPanel(product);
+			productPanelRow.add(productPanelItem);
+		}
 
 		productPanel.revalidate();
 		productPanel.repaint();

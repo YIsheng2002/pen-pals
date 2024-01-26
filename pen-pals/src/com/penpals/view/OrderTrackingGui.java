@@ -28,7 +28,11 @@ import javax.swing.border.EmptyBorder;
 import com.penpals.model.CartItem;
 import com.penpals.model.Customer;
 import com.penpals.model.Order;
+import com.penpals.model.Payment;
 import com.penpals.controller.OrderController;  
+import com.penpals.controller.PaymentController;
+
+import java.io.IOException;
 
 public class OrderTrackingGui extends JFrame implements MouseListener, ActionListener {
 
@@ -86,6 +90,8 @@ public class OrderTrackingGui extends JFrame implements MouseListener, ActionLis
 private Customer cus;
 private Order order;
 private OrderController orderController = new OrderController();
+private PaymentController paymentController = new PaymentController();
+private Payment payment;
 
 
 	/**
@@ -101,6 +107,7 @@ private OrderController orderController = new OrderController();
 
 	private void init(Order order) 
 	{
+		payment = paymentController.getPayment(order.getOrderId());
 		order.setOrderCartItems(orderController.getAllItembyOrderId(order.getOrderId()));
 		//frame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -257,6 +264,8 @@ private OrderController orderController = new OrderController();
 			}
 			
 			 printReceiptBtn = new JButton("Print Receipt");
+			 printReceiptBtn.addActionListener(this);
+			 printReceiptBtn.addMouseListener(this);
 			southPanel.add(printReceiptBtn,BorderLayout.CENTER);
 			
 			
@@ -356,7 +365,7 @@ private OrderController orderController = new OrderController();
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==completeOrderButton||e.getSource()==backButton)
+		if(e.getSource()==completeOrderButton||e.getSource()==backButton||e.getSource()==printReceiptBtn)
 		{
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		}
@@ -366,7 +375,7 @@ private OrderController orderController = new OrderController();
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==completeOrderButton ||e.getSource()==backButton)
+		if(e.getSource()==completeOrderButton ||e.getSource()==backButton||e.getSource()==printReceiptBtn)
 		{
 			setCursor(Cursor.getDefaultCursor());
 		}
@@ -404,6 +413,13 @@ private OrderController orderController = new OrderController();
 			dispose();
 			OrderHistoryGui frame = new OrderHistoryGui(cus);
 			frame.setVisible(true);
+		} else if (e.getSource() == printReceiptBtn) {
+			try {
+				new GenerateReceipt(cus, order);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 

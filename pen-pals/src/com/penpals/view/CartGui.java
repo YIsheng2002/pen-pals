@@ -40,6 +40,8 @@ public class CartGui extends JFrame implements  MouseListener, ActionListener{
 	Order order;
 	double totalPrice = 0;
 	DecimalFormat df ;
+
+
 	//north
 	private JPanel northPanel;
 		private JPanel northLeftPanel;
@@ -101,7 +103,6 @@ private JFrame callingFrame;
 	}
 	
 	public void init(Customer cus) {
-		//cartItems = loadCartItems();
 		cart = new ShoppingCartController().getShoppingCartDetailbyCustomerId(cus.getCustomerId());
 		System.out.println(selectedItems);
 
@@ -483,6 +484,7 @@ private JFrame callingFrame;
 						for(CartItem cartItem : selectedItems)
 						{
 							//remove cartItem from database, cartItem as parameter
+							new ShoppingCartController().removeItemFromCart(cart.getShoppingCartId(), cartItem.getCartItemProduct().getProductId());
 						}
 						dispose();
 						CartGui frame = new CartGui(cus,callingFrame);

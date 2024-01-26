@@ -47,6 +47,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			private JLabel passwordLabel;
 			private JLabel emptySpaceLabel;
 			private JLabel retypePasswordLabel;
+			private JLabel emptySpaceLabel2;
 			private JLabel nameLabel;
 			private JLabel telNumberLabel;
 			private JLabel emailLabel;
@@ -56,6 +57,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			final private JPasswordField passwordField = new JPasswordField();
 			private JLabel passwordErrorLabel;
 			private JPasswordField retypePasswordField;
+			private JLabel retypePasswordErrorLabel;
 			private JTextField nameField;
 			private JTextField telNumberField;
 			private JTextField emailField;
@@ -152,6 +154,10 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 					retypePasswordLabel.setText("Retype Password");
 					retypePasswordLabel.setPreferredSize(new Dimension(200,30));
 					retypePasswordLabel.setHorizontalAlignment(4);
+
+					emptySpaceLabel2 = new JLabel();
+					emptySpaceLabel2.setPreferredSize(new Dimension(200,30));
+					emptySpaceLabel2.setHorizontalAlignment(4);
 					
 					nameLabel = new JLabel();
 					nameLabel.setText("Full Name");
@@ -178,6 +184,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 				textPanel.add(passwordLabel);
 				textPanel.add(emptySpaceLabel);
 				textPanel.add(retypePasswordLabel);
+				textPanel.add(emptySpaceLabel2);
 				textPanel.add(nameLabel);
 				textPanel.add(telNumberLabel);
 				textPanel.add(emailLabel);
@@ -206,6 +213,13 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 					
 					retypePasswordField = new JPasswordField();
 					retypePasswordField.setPreferredSize(new Dimension(450,30));
+					retypePasswordField.addMouseListener(this);
+					Document doc2 = retypePasswordField.getDocument();
+					doc2.addDocumentListener(this);
+
+					retypePasswordErrorLabel = new JLabel();
+					retypePasswordErrorLabel.setText("");
+					retypePasswordErrorLabel.setPreferredSize(new Dimension(450,30));
 					
 					nameField = new JTextField();
 					nameField.setPreferredSize(new Dimension(450,30));
@@ -241,6 +255,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 				fieldPanel.add(passwordField);
 				fieldPanel.add(passwordErrorLabel);
 				fieldPanel.add(retypePasswordField);
+				fieldPanel.add(retypePasswordErrorLabel);
 				fieldPanel.add(nameField);
 				fieldPanel.add(telNumberField);
 				fieldPanel.add(emailField);
@@ -320,14 +335,16 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 		}
 		else if(e.getSource()== addressStateField)
 		{
-			System.out.println("address state field clicked");
 			addressStateField.setText("");
 			addressStateField.setForeground(Color.BLACK);
 		}
 		else if (e.getSource()== passwordField)
 		{
-			System.out.println("password field clicked");
-			passwordErrorLabel.setText("<html><span style = \"color:red;\"> password must between 8-15 characters.<br><span style = \"color:red;\"> password must contain atleast one character. <br> <span style = \"color:red;\"> password must contain atleast one number. </html>");
+			passwordErrorLabel.setText("<html><span style = \"color:red;\"> password must between 8-15 characters.<br><span style = \"color:red;\"> password must contain at least one Uppercase and lowercase character. <br> <span style = \"color:red;\"> password must contain atleast one number. </html>");
+		}
+		else if (e.getSource()== retypePasswordField)
+		{
+			retypePasswordErrorLabel.setText("<html><span style = \"color:red;\"> password doesn't match.</html>");
 		}
 	}
 
@@ -391,7 +408,15 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			String password = passwordField.getText();
 			String colorList[] = {"green", "green", "green"};
 			colorList = validatePasswordType(password, colorList);
-			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase character and one lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase and lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+		} else if (e.getDocument() == retypePasswordField.getDocument()){
+			String password = passwordField.getText();
+			String retypePassword = retypePasswordField.getText();
+			if (password.equals(retypePassword)){
+				retypePasswordErrorLabel.setText("<html><span style = \"color:green;\"> password match.</html>");
+			} else {
+				retypePasswordErrorLabel.setText("<html><span style = \"color:red;\"> password doesn't match.</html>");
+			}
 		}
 	}
 
@@ -402,7 +427,15 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			String password = passwordField.getText();
 			String colorList[] = {"green", "green", "green"};
 			colorList = validatePasswordType(password, colorList);
-			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase character and one lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase and lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+		} else if (e.getDocument() == retypePasswordField.getDocument()){
+			String password = passwordField.getText();
+			String retypePassword = retypePasswordField.getText();
+			if (password.equals(retypePassword)){
+				retypePasswordErrorLabel.setText("<html><span style = \"color:green;\"> password match.</html>");
+			} else {
+				retypePasswordErrorLabel.setText("<html><span style = \"color:red;\"> password doesn't match.</html>");
+			}
 		}
 	}
 
@@ -413,7 +446,15 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			String password = passwordField.getText();
 			String colorList[] = {"green", "green", "green"};
 			colorList = validatePasswordType(password, colorList);
-			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase character and one lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+			passwordErrorLabel.setText("<html><span style = \"color:"+ colorList[0] +";\"> password must between 8-15 characters.<br><span style = \"color:"+ colorList[1] +";\"> password must contain at least one Uppercase and lowercase character. <br> <span style = \"color:"+ colorList[2] +";\"> password must contain atleast one number. </html>");
+		} else if (e.getDocument() == retypePasswordField.getDocument()){
+			String password = passwordField.getText();
+			String retypePassword = retypePasswordField.getText();
+			if (password.equals(retypePassword)){
+				retypePasswordErrorLabel.setText("<html><span style = \"color:green;\"> password match.</html>");
+			} else {
+				retypePasswordErrorLabel.setText("<html><span style = \"color:red;\"> password doesn't match.</html>");
+			}
 		}
 	}
 	
@@ -424,6 +465,15 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 		{
 			JOptionPane.showMessageDialog(null, "Please complete the form.");
 			
+		}else if(customerController.checkUserbyUsername(usernameField.getText()))
+		{
+			JOptionPane.showMessageDialog(null, "Username already exist!","Error",JOptionPane.WARNING_MESSAGE);
+			
+		}
+		else if(customerController.checkUserbyEmail(emailField.getText()))
+		{
+			JOptionPane.showMessageDialog(null, "Email already exist!","Error",JOptionPane.WARNING_MESSAGE);
+			
 		}
 		else if(usernameField.getText().length() < 6)
 		{
@@ -431,11 +481,24 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 			
 		}
 		else if(validatePassword(passwordField.getText()))		{
-			JOptionPane.showMessageDialog(null, "Password must at least 6 character!","Error",JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Invalid password format","Error",JOptionPane.WARNING_MESSAGE);
 		}
 		else if(!passwordField.getText().equals(retypePasswordField.getText()))
 		{
 			JOptionPane.showMessageDialog(null, "Password mismatch","Error",JOptionPane.WARNING_MESSAGE);
+		}
+		else if(validatePhoneNumber(telNumberField.getText())){
+			JOptionPane.showMessageDialog(null, "Invalid phone number","Error",JOptionPane.WARNING_MESSAGE);
+		}
+		else if(customerController.checkUserbyPhoneNumber(telNumberField.getText())) {
+			JOptionPane.showMessageDialog(null, "Telephone number already exist!","Error",JOptionPane.WARNING_MESSAGE);
+		}
+		else if(validateEmail(emailField.getText())){
+			JOptionPane.showMessageDialog(null, "Invalid email","Error",JOptionPane.WARNING_MESSAGE);
+		}
+		else if(addressNumberField.getText().isEmpty()||addressRoadField.getText().isEmpty()||addressPostcodeField.getText().isEmpty()||addressStateField.getText().isEmpty())
+		{
+			JOptionPane.showMessageDialog(null, "Please complete the address form.");
 		}
 		
 		else
@@ -468,7 +531,7 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 		colorList[2] = "green";
 		if ( password.length() < 8 || password.length()>15) colorList[0] = "red";
     	if ( !Pattern.compile(".*[0-9]+.*").matcher(password).matches()) colorList[2] = "red";
-		if ( !Pattern.compile("^(?=[a-z])(?=[A-Z])+.*").matcher(password).matches()) colorList[1] = "red";
+		if ( !Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])+.*").matcher(password).matches()) colorList[1] = "red";
     	return colorList;	
 	}
 
@@ -479,6 +542,24 @@ public class RegisterGui extends JFrame implements ActionListener,MouseListener,
 		Pattern pattern = Pattern.compile(password_pattern);
 
 		Matcher matcher = pattern.matcher(password);
+		return matcher.matches();	
+	}
+
+	public boolean validatePhoneNumber(String phoneNumber)
+	{
+		String phoneNumber_pattern = "^(\\+?6?01)[0-46-9]*[0-9]{7,8}$";
+		Pattern pattern = Pattern.compile(phoneNumber_pattern);
+
+		Matcher matcher = pattern.matcher(phoneNumber);
+		return matcher.matches();	
+	}
+
+	public boolean validateEmail(String email)
+	{
+		String email_pattern = "^[A-Za-z0-9+_.-]+@(.+)$";
+		Pattern pattern = Pattern.compile(email_pattern);
+
+		Matcher matcher = pattern.matcher(email);
 		return matcher.matches();	
 	}
 }

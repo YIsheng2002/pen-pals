@@ -162,7 +162,6 @@ private Customer cus;
 			southPanel = new JPanel(new BorderLayout());
 				
 				southLeftPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-						//dummy data
 						String date = order.getOrderDate();
 					dateLabel = new JLabel(date);
 				southLeftPanel.add(dateLabel);

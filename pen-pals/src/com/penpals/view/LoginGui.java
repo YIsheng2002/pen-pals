@@ -54,12 +54,10 @@ public class LoginGui extends JFrame implements MouseListener, ActionListener{
 
 	private CustomerController customerController = new CustomerController();
 
-	/**
-	 * Create the frame.
-	 */
 	public LoginGui() {
 		customerController.connectToDatabase();
 
+		//frame setting
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450,250);
 		getContentPane().setLayout(new BorderLayout(10, 10));
@@ -230,6 +228,7 @@ public class LoginGui extends JFrame implements MouseListener, ActionListener{
 		
 				String username = usernameField.getText();
 				String password = passwordField.getText();
+				//check if username and password is correct
 				Customer cus = customerController.getCustomerDetailbyUsernamePassword(username, password);
 
 				if(cus != null)

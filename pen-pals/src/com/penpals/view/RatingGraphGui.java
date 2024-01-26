@@ -10,6 +10,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.axis.NumberAxis;
+
   
 public class RatingGraphGui extends JPanel {  
   
